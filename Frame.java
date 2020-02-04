@@ -78,8 +78,8 @@ public class Frame {
 
     /*
     This method simply just checks if the players
-    frame is empty and if so, for now, a message is
-    printed stating as such and the game ends
+    frame is empty. It starts with assuming its not
+    empty and changes if it finds that it is.
     */
     public boolean checkIfEmpty()
     {
@@ -87,10 +87,8 @@ public class Frame {
 
         if(this.frame.size() == 0)
         {
-            System.out.println("This player has no tiles left, GAME OVER");
             isEmpty = true;
-        }else
-            System.out.println("There are tiles in the frame");
+        }
 
         return isEmpty;
     }
@@ -111,11 +109,9 @@ public class Frame {
             boolean letter = m.matches();
 
             if(!letter){
-                System.out.println("This player has no letters left, GAME OVER");
                 containsLetter = false;
             }
         }
-        System.out.println("This player has letter tiles in their frame");
 
         return containsLetter;
     }
