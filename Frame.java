@@ -116,6 +116,26 @@ public class Frame {
         return containsLetter;
     }
 
+    /*
+    This is an overloaded function to allow a
+    check for a specific letter in a players frame
+    */
+    public boolean checkLettersInFrame(char c)
+    {
+        boolean containsLetter = false;
+        int count = 0;
+
+        while(this.frame.size() != count){
+            if (this.frame.get(count) == c) {
+                containsLetter = true;
+                break;
+            }
+            count++;
+        }
+
+        return containsLetter;
+    }
+
     //Allows for the frame to be displayed
     public void displayFrame()
     {
