@@ -10,10 +10,10 @@ public class Player {
     private int P1_score;
     private int P2_score;
 
-    ArrayList<Character> FrameP1;
-    ArrayList<Character> FrameP2;
+    Frame FrameP1;
+    Frame FrameP2;
 
-    Player (String P1,String P2,int P1s, int P2s,  ArrayList<Character> Frame_P1,  ArrayList<Character> Frame_P2 ) {
+    Player (String P1,String P2,int P1s, int P2s,  Frame Frame_P1,  Frame Frame_P2 ) {
 
         this.Player1 = P1;
         this.Player2 = P2;
@@ -44,6 +44,7 @@ public class Player {
     public void setPlayer1 (String player1)
 
     {
+        Player1 = "";
         Player1 = player1;
     }
 
@@ -51,6 +52,7 @@ public class Player {
     public void setPlayer2 (String player2)
 
     {
+        Player2 = "";
         Player2 = player2;
     }
 
@@ -95,12 +97,12 @@ public class Player {
 
     // allows access to a players frame
 
-    public  ArrayList<Character> getFrameP1 ( ) {
+    public  Frame getFrameP1 ( ) {
 
         return FrameP1;
     }
 
-    public  ArrayList<Character> getFrameP2 ( ) {
+    public  Frame getFrameP2 ( ) {
 
         return FrameP2;
     }
