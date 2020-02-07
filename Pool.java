@@ -1,86 +1,79 @@
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Pool {
 	
-	final char[] tiles = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 
-					'H', 'I', 'J', 'K', 'L', 'M', 'N', 
-					'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
-					'V', 'W', 'X', 'Y', 'Z', '_'};
-			
 	
-	final int[] startingNumTiles = {
-					  9, 2, 2, 4, 12, 2, 3, 
-					  2, 9, 1, 1, 4,  2, 6, 
-					  8, 2, 1, 6, 4,  6, 4,
-					  2, 2, 1, 2, 1,  2 };
-	
-	final int[] values = {
+	//--TILES--
+	final char[] tileNames = {
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 
+			'H', 'I', 'J', 'K', 'L', 'M', 'N', 
+			'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
+			'V', 'W', 'X', 'Y', 'Z', '_'};
+
+	final int[] tilePointsValues = {
 			1, 3, 3,  2, 1,  4, 2, 
-		    4, 1, 8,  5, 1,  3, 1, 
-		    1, 3, 10, 1, 1,  1, 1, 
-		    4, 4, 8,  4, 10, 0 };
+			4, 1, 8,  5, 1,  3, 1, 
+			1, 3, 10, 1, 1,  1, 1, 
+			4, 4, 8,  4, 10, 0 };
+	
+	final int[] amountOfTilesInBeginning = {
+			  9, 2, 2, 4, 12, 2, 3, 
+			  2, 9, 1, 1, 4,  2, 6, 
+			  8, 2, 1, 6, 4,  6, 4,
+			  2, 2, 1, 2, 1,  2 };
 	
 	final int numTilesBeginning = 100;
 	
-	//Links tiles with their worth
-	//Constant as tile worth never changes
-	final Map<Character, Integer> tileValueMap;
-	
-	
-	//Stores the tiles currently in the pool
-	//Not constant as amount of tiles will change
-	Map<Character, Integer> tilePool;
+	//Tile Pool 
+	//TILE => AMOUNT OF TILES LEFT
+	final Map<Character, int[]> tilePool;
 	
 	//Amount of tiles in the pool
-	int currPoolSize;
+	private int currPoolSize;
 	
 	Pool()
 	{
 		
-		tileValueMap = new HashMap<Character, Integer>();
-		tilePool     = new HashMap<Character, Integer>();
+		/* We want to create a map that links
+		 * each individual tile to its value (in points)
+		 * and the amount of the tile left in the pool
+		 * 
+		 * Maps make it much easier to retrieve information
+		 * about each tile. We do not need to store our tiles in 
+		 * any particular order thus maps are the better option
+		 * as they can search for elements in O(1) time. 
+		 * 
+		 * i.e TILE => AMOUNT OF TILES LEFT
+		 */
 		
-		//Initialize the pool
-		
-		//This creates a map for:
-		//Tile <-> Number Of This Tile In The Pool
-		this.reset();
-		
-		
-		/*Create Map For:
-		    Tile <-> Value
-		    
-		Will only ever need to be done once as
-		this is constant and never changes so we 
-		can hard-code it in the constructor*/
-		
-		for(int i = 0; i < tiles.length; i++)
-			tileValueMap.put(tiles[i], values[i]);
-		
+		tilePool = new HashMap<Character, int[]>();
+				
+		this.createPool();
 	}
 	
 	//Allows the value of a tile to be queried
 	public int getTileValue(char x)
 	{
 		//Error Check 
-		if(!tileValueMap.containsKey(x))
+		if(!tilePool.containsKey(x))
 			invalidTileException();
 		
 		//Return Value Of Tile
-		return tileValueMap.get(x);
+		return tilePool.get(x)[0];
 	
 	}
 	
 	
-	public int amountInPool(char x)
+	public int amountOfTileInPool(char x)
 	{
 		//Error Check 
-		if(!tilePool.containsKey(x))
+		if(!isValidTile(x))
 			invalidTileException();
 				
 		//Return Amount Of Tiles
-		return tilePool.get(x);
+		return tilePool.get(x)[1];
 	}
 	
 	//--Exceptions--
@@ -90,19 +83,40 @@ public class Pool {
 	}
 	
 	
-    //Allows the pool to be reset
-	public void reset()
+    //Creates the pool
+	private void createPool()
 	{
-		//Remove everything from the pool
-		this.tilePool.clear();
-				
-		for(int i = 0; i < tiles.length; i++)
+		char nameOfTile;
+		int  pointsValOfTile, amountOfTilesLeft;
+		
+		int[] tileInfo;
+		
+		//For Each Tile
+		for(int i = 0; i < tileNames.length; i++)
 		{
-			tilePool.put(tiles[i], startingNumTiles[i]);
+			//Retrieve Tile Info
+			nameOfTile        = tileNames[i];
+			pointsValOfTile   = tilePointsValues[i];
+			amountOfTilesLeft = amountOfTilesInBeginning[i];
+			
+			tileInfo = new int[] {pointsValOfTile, amountOfTilesLeft};
+			
+			//Add It To Our Map
+			tilePool.put(nameOfTile, tileInfo);
+		
 		}
 				
 		//Set the initial size of the pool
 		currPoolSize = numTilesBeginning;
+	}
+	
+	public void resetPool()
+	{
+		//REMOVE all elements from the pool
+		this.tilePool.clear();
+		
+		//Create the pool again
+		this.createPool();
 	}
 	
 	
@@ -122,7 +136,7 @@ public class Pool {
 	
 	
 	//Allows tiles to be drawn at random from the pool
-	public char drawTile()
+	public char drawTileFromPool()
 	{
 		//Error Handling
 		if(this.isEmpty())
@@ -130,7 +144,7 @@ public class Pool {
 		
 		//Tile Range
 		int minIndx = 0;
-		int maxIndx = tiles.length - 1;
+		int maxIndx = tilePool.size() - 1;
 		
 		//Temporary Variables
 		int rand;
@@ -142,13 +156,12 @@ public class Pool {
 		{
 			rand = (int)(Math.random() * ( (maxIndx-minIndx)+1) ) + minIndx;
 			
-			t = tiles[rand];
+			t = tileNames[rand];
 			
-		} while(this.amountInPool(t) == 0);
+		} while(this.amountOfTileInPool(t) == 0);
 		
 		//Change amount of tiles in pool
 		this.removeTile(t);
-		
 		
 		return t;
 	}
@@ -156,23 +169,38 @@ public class Pool {
 	//Removes a tile from the pool
 	private void removeTile(char x)
 	{
-		if(this.amountInPool(x) == 0)
+		//Amount of this tile before removal
+		int amountLeft = this.amountOfTileInPool(x);
+		
+		//Exception handling
+		if(amountLeft == 0)
 			invalidTileException();
 		
-		//Adjust the amount of tile x left in the pool
-		int numLeftovers = tilePool.get(x) - 1;
-		
-		tilePool.put(x, numLeftovers);
+		//Decrement the amount of this tile left
+		setAmountOfTile(x, amountLeft--);
 		
 		//Adjust amount of total tiles
 		currPoolSize--;
 	}
 	
-	
-	public static void main(String[] args)
+	private void setAmountOfTile(char x, int amount)
 	{
-		Pool p = new Pool();
-		p.drawTile();
+		//Exception handling
+		if(!isValidTile(x))
+				invalidTileException();
+			
+		int[] tileInfo = tilePool.get(x);
+		
+		//Set the amount of the tile left
+		tileInfo[1] = amount;
+		
+		//Edit the tile pool
+		tilePool.put(x, tileInfo);
+	}
+	
+	public boolean isValidTile(char x)
+	{
+		return tilePool.containsKey(x);
 	}
 }
 
