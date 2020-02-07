@@ -10,8 +10,19 @@ public class Player {
     private int P1_score;
     private int P2_score;
 
-    String FrameP1;
-    String FrameP2;
+    ArrayList<Character> FrameP1;
+    ArrayList<Character> FrameP2;
+
+    Player (String P1,String P2,int P1s, int P2s,  ArrayList<Character> Frame_P1,  ArrayList<Character> Frame_P2 ) {
+
+        this.Player1 = P1;
+        this.Player2 = P2;
+        this.P1_score = P1s;
+        this.P2_score = P2s;
+        this.FrameP1 = Frame_P1;
+        this.FrameP2 = Frame_P2;
+
+    }
 
 
     // allows player data to be reset
@@ -84,12 +95,12 @@ public class Player {
 
     // allows access to a players frame
 
-    public String getFrameP1 ( ) {
+    public  ArrayList<Character> getFrameP1 ( ) {
 
         return FrameP1;
     }
 
-    public String getFrameP2 ( ) {
+    public  ArrayList<Character> getFrameP2 ( ) {
 
         return FrameP2;
     }
@@ -112,7 +123,4 @@ public class Player {
     }
 
 
-
 }
-
-
