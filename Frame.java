@@ -15,7 +15,9 @@ public class Frame {
     //This creates a players frame at the start of the game
     public Frame()
     {
-        this.frame = addToFrame();
+        ArrayList<Character> newFrame = new ArrayList<Character>();
+
+        this.frame = addToFrame(newFrame);
     }
 
     //Allows access to a players frame
@@ -25,34 +27,27 @@ public class Frame {
     }
 
     /*
-    This method allows a player to add tiles to their
-    frame at the start of the game. It works by returning
-    an ArrayList that consists of letters taken from the pool.
-    letters from the pool are added until the size of the
-    ArrayList reaches 7, which is the max tiles a player
-    can have in their frame. This should only be used to
-    create a players frame.
+    This method allows tiles to be added to a
+    frame. It works by returning an ArrayList that consists
+    of letters taken from the pool. Letters from the pool
+    are added until the size of the frame reaches 7 or
+    when the pool empties.
     */
-    private ArrayList<Character> addToFrame()
+    public ArrayList<Character> addToFrame(ArrayList<Character> frame)
     {
-        ArrayList<Character> frame = new ArrayList<Character>();
-
-        while(frame.size() != 7)
+        while(frame.size() != 7 && pool.size() != 0)
         {
-            frame.add(pool.drawTile());
+            frame.add(pool.drawTileFromPool());
         }
+
         return frame;
     }
 
     /*
     This method will accept an array of characters chosen
-    by the user to create a word and also accepts an int
-    telling the method how many tiles are left in the poolbag.
+    by the user to create a word
     The letters present inside the array c will be removed from
-    the frame. If the total num of tiles in the bag
-    is greater than 0, then tiles will be added back into the
-    frame until either the frame is full or the bag becomes
-    empty.
+    the frame. addToFrame is called to refill the frame.
     */
     public void removeFromFrame(ArrayList<Character> list)
     {
@@ -60,19 +55,7 @@ public class Frame {
             this.frame.remove(c);
         }
 
-        if(!pool.isEmpty())
-        {
-            while(this.frame.size() != 7)
-            {
-                this.frame.add(pool.drawTile());
-
-                //allows for the loop to break if the pool is emptied
-                if(pool.isEmpty())
-                {
-                    break;
-                }
-            }
-        }
+        this.frame = addToFrame(this.frame);
 
     }
 
@@ -96,9 +79,9 @@ public class Frame {
     /*
     This method scans a players frame to check if
     there are any letter tiles present in a their frame.
-    If none are found then like the checkIfEmpty method,
-    a message is printed to state that the game is now
-    over as a player has run out of letter tiles.
+    Like the checkIfEmpty method, it starts with assuming
+    that letters are present and returns false when no letters
+    are found.
     */
     public boolean checkLettersInFrame()
     {
@@ -123,14 +106,9 @@ public class Frame {
     public boolean checkLettersInFrame(char c)
     {
         boolean containsLetter = false;
-        int count = 0;
 
-        while(this.frame.size() != count){
-            if (this.frame.get(count) == c) {
-                containsLetter = true;
-                break;
-            }
-            count++;
+        if(this.frame.contains(c)){
+            containsLetter = true;
         }
 
         return containsLetter;
@@ -144,6 +122,11 @@ public class Frame {
             System.out.print(" | " + c + " | ");
         }
         System.out.println();
+    }
+
+    //This method allows for other classes to access a tile in a frame
+    public Character getTileFromFrame(int i){
+        return this.frame.get(i);
     }
 
 }
