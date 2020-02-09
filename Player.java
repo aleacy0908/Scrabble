@@ -10,17 +10,19 @@ public class Player {
     private int P1_score;
     private int P2_score;
 
-    Frame FrameP1;
-    Frame FrameP2;
+    int score = 0;
 
-    Player (String P1,String P2,int P1s, int P2s,  Frame Frame_P1,  Frame Frame_P2 ) {
+    private Frame frame1;
+    private Frame frame2;
+
+    Player (String P1,String P2,int P1s, int P2s) {
 
         this.Player1 = P1;
         this.Player2 = P2;
         this.P1_score = P1s;
         this.P2_score = P2s;
-        this.FrameP1 = Frame_P1;
-        this.FrameP2 = Frame_P2;
+        this.frame1 = new Frame();
+        this.frame2 = new Frame();
 
     }
 
@@ -44,16 +46,14 @@ public class Player {
     public void setPlayer1 (String player1)
 
     {
-        Player1 = "";
-        Player1 = player1;
+       this.Player1 = player1;
     }
 
 
     public void setPlayer2 (String player2)
 
     {
-        Player2 = "";
-        Player2 = player2;
+        this.Player2 = player2;
     }
 
 
@@ -62,18 +62,14 @@ public class Player {
     public void increaseScore(int Player)
     {
 
-        int score = 0;
-
         if (Player == 1)
         {
-            score = getP1_score();
             P1_score += score;
 
         }
 
         if (Player == 2)
         {
-            score = getP2_score();
             P2_score += score;
 
         }
@@ -97,14 +93,14 @@ public class Player {
 
     // allows access to a players frame
 
-    public  Frame getFrameP1 ( ) {
+    public Frame getFrameP1 ( ) {
 
-        return FrameP1;
+        return frame1;
     }
 
     public  Frame getFrameP2 ( ) {
 
-        return FrameP2;
+        return frame2;
     }
 
 
@@ -126,3 +122,5 @@ public class Player {
 
 
 }
+
+
