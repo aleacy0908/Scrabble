@@ -15,9 +15,9 @@ public class Frame {
     //This creates a players frame at the start of the game
     public Frame()
     {
-        ArrayList<Character> newFrame = new ArrayList<Character>();
+        this.frame = new ArrayList<Character>();
 
-        this.frame = addToFrame(newFrame);
+        addToFrame();
     }
 
     //Allows access to a players frame
@@ -33,14 +33,13 @@ public class Frame {
     are added until the size of the frame reaches 7 or
     when the pool empties.
     */
-    public ArrayList<Character> addToFrame(ArrayList<Character> frame)
+    public void addToFrame()
     {
-        while(frame.size() != 7 && pool.size() != 0)
+        while(this.frame.size() != 7 && pool.size() != 0)
         {
-            frame.add(pool.drawTileFromPool());
+            this.frame.add(pool.drawTileFromPool());
         }
 
-        return frame;
     }
 
     /*
@@ -55,7 +54,7 @@ public class Frame {
             this.frame.remove(c);
         }
 
-        this.frame = addToFrame(this.frame);
+        addToFrame();
 
     }
 
