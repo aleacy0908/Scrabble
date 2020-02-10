@@ -1,11 +1,13 @@
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class PoolTest {
+
+ public class PoolTest {
 
 	@Test
-	void testGetTileValue() {
+	public void testGetTileValue() {
 		Pool pl = new Pool();
 		
 		assert(pl.getTileValue('A') == 1);
@@ -14,7 +16,7 @@ class PoolTest {
 	}
 	
 	@Test
-	void testAmountOfTileInPool() {
+	public void testAmountOfTileInPool() {
 		Pool pl = new Pool();
 		
 		assert(pl.amountOfTileInPool('A') == 9);
@@ -23,7 +25,7 @@ class PoolTest {
 	}
 	
 	@Test
-	void testDrawTileFromPool() {
+	public void testDrawTileFromPool() {
 		Pool pl = new Pool();
 		
 		int originalPoolSize = pl.size();
@@ -44,7 +46,7 @@ class PoolTest {
 	}
 	
 	@Test
-	void testResetPool() {
+	public void testResetPool() {
 		
 		Pool pl = new Pool();
 		int originalPoolSize = pl.size();
@@ -64,7 +66,7 @@ class PoolTest {
 	}
 	
 	@Test
-	void testSize() {
+	public void testSize() {
 		
 		Pool pl = new Pool();
 		
@@ -72,7 +74,7 @@ class PoolTest {
 	}
 	
 	@Test
-	void testIsEmpty() {
+	public void testIsEmpty() {
 		
 		Pool pl = new Pool();
 		
