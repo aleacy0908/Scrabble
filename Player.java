@@ -4,23 +4,22 @@ import java.util.*;
 
 public class Player {
 
-    private String Player1,Player2;
+    int score;
+
+    private String Player;
 
 
-    private int P1_score;
-    private int P2_score;
-    
-    private Frame frame1;
-    private Frame frame2;
+    private int P_score;
 
-    Player (String P1,String P2,int P1s, int P2s) {
+    private Frame frame;
 
-        this.Player1 = P1;
-        this.Player2 = P2;
-        this.P1_score = P1s;
-        this.P2_score = P2s;
-        this.frame1 = new Frame();
-        this.frame2 = new Frame();
+
+    Player (String P,int Ps) {
+
+        this.Player = P;
+        this.P_score = Ps;
+        this.frame = new Frame();
+
 
     }
 
@@ -29,11 +28,13 @@ public class Player {
 
     public void reset()
     {
-        P1_score = 0;
-        P2_score = 0;
+        // sets player score back to zero
+        P_score = 0;
 
-        Player1 = "";
-        Player2 = "";
+
+        // erases player name
+        Player = "";
+
 
     }
 
@@ -41,82 +42,52 @@ public class Player {
 
     // allows name of a player to be set
 
-    public void setPlayer1 (String player1)
+    public void setPlayer (String player)
 
     {
-       this.Player1 = player1;
-    }
-
-
-    public void setPlayer2 (String player2)
-
-    {
-        this.Player2 = player2;
+       this.Player = player;
     }
 
 
     // allows a player score to be increased
 
-    public void increaseScore(int Player, int score)
+    public void increaseScore(int score)
     {
-
-        if (Player == 1)
-        {
-            P1_score += score;
-
-        }
-
-        if (Player == 2)
-        {
-            P2_score += score;
-
-        }
+        P_score += score;
     }
 
 
 
     // allows access to their score
 
-    public int getP1_score ( ) {
+    public int getP_score ( ) {
 
-        return P1_score;
+        // return score of player one
+        return P_score;
     }
-
-    public int getP2_score ( ) {
-
-        return P2_score;
-    }
-
 
 
     // allows access to a players frame
 
-    public Frame getFrameP1 ( ) {
+    public Frame getFrameP ( ) {
 
-        return frame1;
+        // return frame of player one
+        return frame;
     }
 
-    public  Frame getFrameP2 ( ) {
-
-        return frame2;
-    }
 
 
 
 
     // allows display of a players name
 
-    public String nameP1()
+    public String nameP()
 
     {
-        return Player1;
+        // return name of player one
+        return Player;
     }
 
-    public String nameP2()
-
-    {
-        return Player2;
-    }
 
 
 }
