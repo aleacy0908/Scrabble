@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -52,7 +56,7 @@ class PlayerTest {
     }
 
     @Test
-    public void getScore( ) {
+    public void TestgetScore( ) {
 
         Player j = new Player("john", "bill", 57, 68);
 
@@ -65,5 +69,22 @@ class PlayerTest {
         assertEquals(68, j.getP2_score());
 
     }
+
+    @Test
+    public void TestgetFrame( ) {
+
+
+        Frame frameP1 = new Frame();
+        Frame frameP2 = new Frame();
+
+        frameP1.frame = new ArrayList<Character>(Arrays.asList('E', 'C', 'X', 'S', 'K'));
+        frameP2.frame = new ArrayList<Character>(Arrays.asList('S', 'W', 'Q', 'A', 'B'));
+
+        assertEquals(Arrays.asList('E', 'C', 'X', 'S', 'K'),frameP1.getFrame());
+        assertEquals(Arrays.asList('S', 'W', 'Q', 'A', 'B'),frameP2.getFrame());
+
+
+    }
+
 
     }
