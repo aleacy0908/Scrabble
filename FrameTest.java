@@ -1,28 +1,16 @@
+import org.junit.jupiter.api.Test;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrameTest {
 
-    public static void main(String[] args) {
 
-        getFrame();
-        System.out.println();
-        addToFrame();
-        System.out.println();
-        removeFromFrame();
-        System.out.println();
-        checkIfEmpty();
-        System.out.println();
-        checkLettersInFrame();
-        System.out.println();
-        getTileFromFrame();
-
-    }
-
-    static void getFrame() {
+    @Test
+    void getFrame() {
         Frame frame1 = new Frame();
         frame1.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', '_', 'D', 'E', 'F'));
 
@@ -34,7 +22,8 @@ public class FrameTest {
         assertEquals(Arrays.asList('A', 'B', 'C', '_', 'D', 'E', 'F'),frame1.getFrame());
     }
 
-    static void addToFrame() {
+    @Test
+    void addToFrame() {
         Frame frame1 = new Frame();
         frame1.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C'));
 
@@ -42,14 +31,15 @@ public class FrameTest {
         frame1.displayFrame();
         System.out.println("This frame only contains 3 tiles so the addToFrame function is called until" +
                 " the frame contains 7 tiles");
-        frame1.frame = frame1.addToFrame(frame1.getFrame());
+        frame1.addToFrame();
         frame1.displayFrame();
 
 
         assertEquals(frame1.frame.size(),7);
     }
 
-    static void removeFromFrame() {
+    @Test
+    void removeFromFrame() {
         //an arraylist that contains letters for the class to remove
         ArrayList<Character> c = new ArrayList<Character>();
         Frame frame1 = new Frame();
@@ -68,7 +58,8 @@ public class FrameTest {
         assertEquals(frame1.frame.size(),7);
     }
 
-    static void checkIfEmpty() {
+    @Test
+    void checkIfEmpty() {
         Frame frame2 = new Frame();
 
         System.out.println("---- checkIfEmpty test ----");
@@ -85,7 +76,8 @@ public class FrameTest {
         assertTrue(frame2.checkIfEmpty());
     }
 
-    static void checkLettersInFrame() {
+    @Test
+    void checkLettersInFrame() {
         Frame frame2 = new Frame();
         frame2.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', '_', 'D', 'E', 'F'));
 
@@ -104,7 +96,8 @@ public class FrameTest {
         assertFalse(frame2.checkLettersInFrame('T'));
     }
 
-    static void getTileFromFrame() {
+    @Test
+    void getTileFromFrame() {
 
         System.out.println("---- getTileFromFrame test ----");
 
