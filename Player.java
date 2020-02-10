@@ -9,9 +9,7 @@ public class Player {
 
     private int P1_score;
     private int P2_score;
-
-    int score = 0;
-
+    
     private Frame frame1;
     private Frame frame2;
 
@@ -59,7 +57,7 @@ public class Player {
 
     // allows a player score to be increased
 
-    public void increaseScore(int Player)
+    public void increaseScore(int Player, int score)
     {
 
         if (Player == 1)
