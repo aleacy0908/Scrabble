@@ -10,23 +10,22 @@ import org.junit.jupiter.api.Test;
 
 class PlayerTest {
 
-    int score = 34;
 
-    @Test
-    public void TestgetName ( ) {
+
+    static void TestgetName ( ) {
 
 
         Player j = new Player("bill", 56);
 
 
         assert (j.nameP().equals("bill"));
-        assertFalse(j.nameP().equals("john"));
+
 
         System.out.println("getName Test Succesful");
+
     }
 
-    @Test
-    public void TestsetName ( ) {
+    static void TestsetName ( ) {
 
         String name = "john";
         String name2 = "bill";
@@ -43,8 +42,8 @@ class PlayerTest {
 
     }
 
-    @Test
-    public void Testreset( ) {
+
+    static void Testreset( ) {
 
         //String blank = "";
         Player j = new Player("john", 67);
@@ -61,8 +60,8 @@ class PlayerTest {
 
     }
 
-    @Test
-    public void TestgetScore( ) {
+
+    static void TestgetScore( ) {
 
         Player j = new Player("john",68);
 
@@ -74,8 +73,8 @@ class PlayerTest {
 
     }
 
-    @Test
-    public void TestgetFrame( ) {
+
+    static void TestgetFrame( ) {
 
 
         Frame frameP1 = new Frame();
@@ -84,16 +83,17 @@ class PlayerTest {
         frameP1.frame = new ArrayList<Character>(Arrays.asList('E', 'C', 'X', 'S', 'K','J'));
         frameP2.frame = new ArrayList<Character>(Arrays.asList('S', 'W', 'Q', 'A', 'B','L'));
 
+
         assertEquals(Arrays.asList('E', 'C', 'X', 'S', 'K','J'),frameP1.getFrame());
         assertEquals(Arrays.asList('S', 'W', 'Q', 'A', 'B','L'),frameP2.getFrame());
-
+        
         System.out.println("getFrame Test Succesful");
 
 
     }
 
-    @Test
-    public void TestincreaseScore() {
+
+    static void TestincreaseScore() {
 
 
         Player j = new Player("john",57);
@@ -109,6 +109,17 @@ class PlayerTest {
         assertEquals(67, j.getP_score());
 
         System.out.println("getScore Test Successful");
+
+    }
+
+    public static void main (String[] args) {
+
+       TestgetName();
+       TestsetName();
+       Testreset();
+       TestgetScore();
+       TestgetFrame();
+       TestincreaseScore();
 
     }
 
