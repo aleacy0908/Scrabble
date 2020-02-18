@@ -36,6 +36,12 @@ public class Board {
         boolean    is_occupied = false;
         char       letter;
 
+        Square()
+        {
+            //Set The Square's Score Multiplier
+            this.score_multiplier = SCORE_MULT.NONE;
+        }
+
         Square(SCORE_MULT multiplier)
         {
             //Set The Square's Score Multiplier
@@ -57,6 +63,9 @@ public class Board {
 
             return this.letter;
         }
+
+        SCORE_MULT getMultiplier() { return this.score_multiplier; }
+        void       setMultiplier(SCORE_MULT m) { this.score_multiplier = m; }
 
     }
 
