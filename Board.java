@@ -1,5 +1,7 @@
+import java.util.Arrays;
 
 /* Score Multipliers:
+    NONE  = None
     DL = Double Letter
     TL = Triple Letter
     DW = Double Word
@@ -69,11 +71,17 @@ public class Board {
 
     }
 
+    //MAIN BOARD
+    final short B_ROWS = 15;
+    final short B_COLS = 15;
+
+    private Square[][] BOARD = new Square[B_ROWS][B_COLS];
+
     Board()
     {
-
+        //Fill The Board With Squares
+        Square emptySquare = new Square();
+        Arrays.fill(BOARD, emptySquare);
     }
-
-
 
 }
