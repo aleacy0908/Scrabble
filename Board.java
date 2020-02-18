@@ -84,4 +84,16 @@ public class Board {
         Arrays.fill(BOARD, emptySquare);
     }
 
+    private Square getSquare(int x, int y)
+    {
+        //Error Handle: Invalid Coordinate
+        if(x < 1 || x > B_ROWS ||
+           y < 1 || y > B_COLS)
+        {
+            throw new IllegalArgumentException("Invalid Coordinate");
+        }
+
+        return BOARD[x-1][y-1];
+    }
+
 }
