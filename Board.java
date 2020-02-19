@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 /* Score Multipliers:
     NONE  = None
@@ -94,6 +96,74 @@ public class Board {
         }
 
         return BOARD[x-1][y-1];
+    }
+
+}
+
+class wordPlacement{
+
+    int numOfWordsOnBoard = 0;
+
+    private static Player player1 = new Player("p1", 0);
+    Player player2 = new Player("p2", 0);
+
+    static void tileSelection(){
+
+        boolean playerFinished = false;
+        Scanner playerSelection = new Scanner(System.in);
+        Scanner finished = new Scanner(System.in);
+        String selectedTiles;
+        char done;
+        String word = "";
+
+        while(!playerFinished){
+            System.out.println("Select the tiles you wish to create a word with:");
+            player1.getFrameP().displayFrame();
+            selectedTiles = playerSelection.next().toUpperCase();
+
+            if(necessaryLetters(selectedTiles)){
+                word = selectedTiles;
+            }
+
+            System.out.println("word chosen : " + word);
+            System.out.println("Is this the word you would like to place on the board? Y/N");
+            done = finished.next().toUpperCase().charAt(0);
+
+            if(done == 'Y'){
+                ArrayList<Character> tiles = new ArrayList<Character>();
+
+                for(int i = 0; i<word.length()-1; i++){
+                    tiles.add(word.charAt(i));
+                }
+                player1.getFrameP().removeFromFrame(tiles);
+                playerFinished = true;
+            }else{
+                word = "";
+            }
+
+            player1.getFrameP().displayFrame();
+            System.out.println("word placed : " + word);
+
+        }
+
+
+
+
+
+    }
+
+    static boolean necessaryLetters(String word){
+
+        boolean hasLetters = false;
+
+        for(int i = 0; i <= word.length()-1; i++){
+            if(player1.getFrameP().checkLettersInFrame(word.charAt(i))){
+                hasLetters = true;
+            }
+        }
+
+
+        return hasLetters;
     }
 
 }
