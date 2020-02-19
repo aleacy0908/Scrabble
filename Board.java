@@ -104,25 +104,25 @@ class wordPlacement{
 
     int numOfWordsOnBoard = 0;
 
-    private static Player player1 = new Player("p1", 0);
-    Player player2 = new Player("p2", 0);
+    public wordPlacement() {
+    }
 
-    static void tileSelection(){
+    void tileSelection(Player player){
 
         boolean playerFinished = false;
         Scanner playerSelection = new Scanner(System.in);
         Scanner finished = new Scanner(System.in);
-        String selectedTiles;
         char done;
         String word = "";
 
         while(!playerFinished){
             System.out.println("Select the tiles you wish to create a word with:");
-            player1.getFrameP().displayFrame();
-            selectedTiles = playerSelection.next().toUpperCase();
+            player.getFrameP().displayFrame();
+            word = playerSelection.next().toUpperCase();
 
-            if(necessaryLetters(selectedTiles)){
-                word = selectedTiles;
+            if(!necessaryLetters(word,player)){
+                System.out.println("Invalid word picked");
+                continue;
             }
 
             System.out.println("word chosen : " + word);
@@ -132,33 +132,32 @@ class wordPlacement{
             if(done == 'Y'){
                 ArrayList<Character> tiles = new ArrayList<Character>();
 
-                for(int i = 0; i<word.length()-1; i++){
+                for(int i = 0; i<word.length(); i++){
                     tiles.add(word.charAt(i));
                 }
-                player1.getFrameP().removeFromFrame(tiles);
+                player.getFrameP().removeFromFrame(tiles);
+
+                numOfWordsOnBoard++;
+                System.out.println("word placed : " + word);
+                player.getFrameP().displayFrame();
                 playerFinished = true;
-            }else{
-                word = "";
             }
-
-            player1.getFrameP().displayFrame();
-            System.out.println("word placed : " + word);
-
         }
-
-
-
-
 
     }
 
-    static boolean necessaryLetters(String word){
+
+
+    boolean necessaryLetters(String word, Player player){
 
         boolean hasLetters = false;
 
         for(int i = 0; i <= word.length()-1; i++){
-            if(player1.getFrameP().checkLettersInFrame(word.charAt(i))){
+            if(player.getFrameP().checkLettersInFrame(word.charAt(i))){
                 hasLetters = true;
+            }else
+            {
+                hasLetters = false;
             }
         }
 
