@@ -90,7 +90,7 @@ public class Board {
     {
         //Error Handle: Invalid Coordinate
         if(x < 1 || x > B_ROWS ||
-           y < 1 || y > B_COLS)
+                y < 1 || y > B_COLS)
         {
             throw new IllegalArgumentException("Invalid Coordinate");
         }
@@ -98,6 +98,28 @@ public class Board {
         return BOARD[x-1][y-1];
     }
 
+    public void DisplayBoard ( ) {
+        int i, j;
+
+        System.out.println("");
+        System.out.println("                                       SCRABBLE BOARD                                         ");
+
+
+        for (i = B_ROWS; i > 0; i--) {
+            System.out.println("");
+            System.out.print("  ___________________________________________________________________________________________\n");
+
+            for (j = B_COLS + 1; j > 0; j--) {
+                System.out.print("  | " + " " + " ");
+
+
+            }
+        }
+        System.out.println("");
+        System.out.print("  ___________________________________________________________________________________________\n");
+
+
+    }
 }
 
 class wordPlacement{
