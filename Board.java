@@ -81,9 +81,68 @@ public class Board {
 
     Board()
     {
-        //Fill The Board With Squares
-        Square emptySquare = new Square();
-        Arrays.fill(BOARD, emptySquare);
+        //First, Fill The Board With Empty Squares
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                BOARD[i][j] = new Square();
+            }
+        }
+
+
+        /*--Multipliers--
+        The Scrabble board is filled with multipliers that have a pattern as to
+        where they are placed. Instead of an array with all 52 multiplier coordinates,
+        we have reduced that to an array of 13 using this pattern on the scrabble board.
+
+        The Pattern class reflects a single coordinate across the four sections of the
+        board. We still need to initialise a few coordinates for each multiplier type
+        as they dictate where our pattern begins.
+         */
+
+        int[][][] multiplierCoords = {
+                { {1, 4}, {8, 4}, {7, 7}, {3, 7}        },
+                { {2, 2}, {3, 3}, {4, 4}, {5, 5}, {8, 8}},
+                { {2, 6}, {6, 6}                        },
+                { {1, 1}, {8, 1}                        }
+        };
+
+        /*
+        Our pattern object will turn a single coordinate for
+        one quarter section of the board into four for all four
+        sections
+         */
+        Pattern p = new Pattern(B_ROWS);
+
+        SCORE_MULT multID;
+
+        for (int i = 0; i < 4; i++) {
+            //Switch which multiplier we want to
+            //place on the board
+
+            switch (i) {
+                case 1:
+                    multID = SCORE_MULT.DW;
+                    break;
+                case 2:
+                    multID = SCORE_MULT.TL;
+                    break;
+                case 3:
+                    multID = SCORE_MULT.TW;
+                    break;
+                default:
+                    multID = SCORE_MULT.DL;
+            }
+
+            //Generate A Pattern For Each Multiplier Type
+            p.setPatternCoords(multiplierCoords[i]);
+
+            //For Each Coordinate In Our Pattern
+            for (int[] coord : p.getPattern()) {
+                Square tmp = getSquare(coord[0], coord[1]);
+
+                tmp.setMultiplier(multID);
+            }
+        }
     }
 
     private Square getSquare(int x, int y)
