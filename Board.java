@@ -157,25 +157,57 @@ public class Board {
         return BOARD[x-1][y-1];
     }
 
-    public void DisplayBoard ( ) {
+     public void DisplayBoard() {
         int i, j;
 
         System.out.println("");
         System.out.println("                                       SCRABBLE BOARD                                         ");
 
 
-        for (i = B_ROWS; i > 0; i--) {
+        for (i = 1; i <= B_ROWS; i++) {
             System.out.println("");
-            System.out.print("  ___________________________________________________________________________________________\n");
+            System.out.print("  _________________________________________________________________________________________________________\n");
 
-            for (j = B_COLS + 1; j > 0; j--) {
-                System.out.print("  | " + " " + " ");
+            for (j = 1; j <= B_COLS; j++) {
+
+                Square sqr = getSquare(i,j);
+
+                if(sqr.isOccupied())
+                {
+                    char tile = sqr.getTile();
+
+                    System.out.print("  | " + tile + " ");
+                }
+                else
+                {
+                    String output;
+
+                    switch(sqr.getMultiplier())
+                    {
+                        case DL:
+                            output = "DL";
+                            break;
+                        case DW:
+                            output = "DW";
+                            break;
+                        case TL:
+                            output = "TL";
+                            break;
+                        case TW:
+                            output = "TW";
+                            break;
+                        default:
+                            output = "  ";
+                    }
+
+                    System.out.print("  | " + output + " ");
+                }
 
 
             }
         }
         System.out.println("");
-        System.out.print("  ___________________________________________________________________________________________\n");
+        System.out.print("  _________________________________________________________________________________________________________\n");
 
 
     }
