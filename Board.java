@@ -11,25 +11,6 @@ import java.util.Scanner;
 
 enum SCORE_MULT {NONE, DL, TL, DW, TW};
 
-//Coordinate Class
-class Coord
-{
-    private short x;
-    private short y;
-
-    Coord(short x, short y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
-    short getX() { return this.x; }
-    short getY() { return this.y; }
-
-    void setX(short x) { this.x = x; }
-    void setY(short y) { this.y = y; }
-}
-
 public class Board {
 
     private class Square
@@ -70,6 +51,8 @@ public class Board {
 
         SCORE_MULT getMultiplier() { return this.score_multiplier; }
         void       setMultiplier(SCORE_MULT m) { this.score_multiplier = m; }
+        
+        boolean isOccupied() { return this.is_occupied; }
 
     }
 
