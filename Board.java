@@ -91,8 +91,8 @@ public class Board {
 
         /*--Multipliers--
         The Scrabble board is filled with multipliers that have a pattern as to
-        where they are placed. Instead of an array with all 52 multiplier coordinates,
-        we have reduced that to an array of 13 using this pattern on the scrabble board.
+        where they are placed. Instead of an array with all 62 multiplier coordinates,
+        we have reduced that to an array of 15 using this pattern on the scrabble board.
 
         The Pattern class reflects a single coordinate across the four sections of the
         board. We still need to initialise a few coordinates for each multiplier type
@@ -100,10 +100,10 @@ public class Board {
          */
 
         int[][][] multiplierCoords = {
-                { {1, 4}, {8, 4}, {7, 7}, {3, 7}        },
-                { {2, 2}, {3, 3}, {4, 4}, {5, 5}, {8, 8}},
-                { {2, 6}, {6, 6}                        },
-                { {1, 1}, {8, 1}                        }
+                {{1, 4}, {8, 4}, {7,3}, {7, 7}, {3, 7}},
+                {{2, 2}, {3, 3}, {4, 4}, {5, 5}, {8, 8}},
+                {{2, 6}, {6, 6}, {10,2}},
+                {{1, 1}, {8, 1}}
         };
 
         /*
