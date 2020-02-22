@@ -140,7 +140,20 @@ public class Board {
         return BOARD[x-1][y-1];
     }
 
-     public void DisplayBoard() {
+    private void setSquare(int x, int y, char t){
+
+        //Error Handle: Invalid Coordinate
+        if(x < 1 || x > B_ROWS ||
+                y < 1 || y > B_COLS)
+        {
+            throw new IllegalArgumentException("Invalid Coordinate");
+        }
+
+        BOARD[x-1][y-1].setTile(t);
+    }
+
+
+    public void DisplayBoard() {
         int i, j;
 
         System.out.println("");
