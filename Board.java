@@ -207,71 +207,149 @@ public class Board {
 
 
     }
-}
 
-class wordPlacement{
+    public class wordPlacement{
 
-    int numOfWordsOnBoard = 0;
+        int numOfWordsOnBoard = 0;
 
-    public wordPlacement() {
-    }
+        public wordPlacement(){}
 
-    void tileSelection(Player player){
-
-        boolean playerFinished = false;
-        Scanner playerSelection = new Scanner(System.in);
-        Scanner finished = new Scanner(System.in);
-        char done;
-        String word = "";
-
-        while(!playerFinished){
-            System.out.println("Select the tiles you wish to create a word with:");
-            player.getFrameP().displayFrame();
-            word = playerSelection.next().toUpperCase();
-
-            if(!necessaryLetters(word,player)){
-                System.out.println("Invalid word picked");
-                continue;
-            }
-
-            System.out.println("word chosen : " + word);
-            System.out.println("Is this the word you would like to place on the board? Y/N");
-            done = finished.next().toUpperCase().charAt(0);
-
-            if(done == 'Y'){
-                ArrayList<Character> tiles = new ArrayList<Character>();
-
-                for(int i = 0; i<word.length(); i++){
-                    tiles.add(word.charAt(i));
-                }
-                player.getFrameP().removeFromFrame(tiles);
-
-                numOfWordsOnBoard++;
-                System.out.println("word placed : " + word);
-                player.getFrameP().displayFrame();
-                playerFinished = true;
-            }
-        }
-
-    }
+        void tileSelection(Player player){
 
 
+            boolean playerFinished = false;
+            Scanner playerSelection = new Scanner(System.in);
+            Scanner square = new Scanner(System.in);
+            Scanner finished = new Scanner(System.in);
+            Scanner dir = new Scanner(System.in);
+            int x,y;
+            char done,direction;
+            String word = "";
 
-    boolean necessaryLetters(String word, Player player){
-
-        boolean hasLetters = false;
-
-        for(int i = 0; i <= word.length()-1; i++){
-            if(player.getFrameP().checkLettersInFrame(word.charAt(i))){
-                hasLetters = true;
-            }else
+            while(!playerFinished)
             {
-                hasLetters = false;
+                System.out.println("Select the tiles you wish to create a word with:");
+                player.getFrameP().displayFrame();
+                word = playerSelection.next().toUpperCase();
+
+                if(!necessaryLetters(word,player))
+                {
+                    System.out.println("Invalid word picked");
+                    continue;
+                }
+
+                System.out.println("Where would you like to place the word on the board?");
+                System.out.println("Row: ");
+                x = square.nextInt();
+                System.out.println("Column: ");
+                y = square.nextInt();
+                System.out.println("Which direction do you want the word to go?");
+                direction = dir.next().toUpperCase().charAt(0);
+
+                if(numOfWordsOnBoard == 0)
+                {
+                    if(x != 8 && y != 8)
+                    {
+                        System.out.println("First played word must start at the centre of the board");
+                        continue;
+                    }else
+                        fillSquare(word,x,y,direction);
+                }
+
+                if(!withinBoard(x,y,direction,word))
+                {
+                    System.out.println("Out of board bounds");
+                    continue;
+                }
+
+
+                System.out.println("word chosen : " + word);
+                System.out.println("Is this the word you would like to place on the board? Y/N");
+                done = finished.next().toUpperCase().charAt(0);
+
+                if(done == 'Y')
+                {
+                    ArrayList<Character> tiles = new ArrayList<Character>();
+
+                    for(int i = 0; i<word.length(); i++)
+                    {
+                        tiles.add(word.charAt(i));
+                    }
+                    player.getFrameP().removeFromFrame(tiles);
+
+                    numOfWordsOnBoard++;
+                    System.out.println("word placed : " + word);
+                    player.getFrameP().displayFrame();
+                    playerFinished = true;
+                }
             }
         }
 
+        void fillSquare(String word, int x, int y, char direction){
 
-        return hasLetters;
+            if(direction == 'V') {
+                for(int i = 0; i < word.length(); i++)
+                {
+                    setSquare(x,i,word.charAt(i));
+                }
+            }else{
+                for(int i = 0; i < word.length(); i++)
+                {
+                    setSquare(i,y,word.charAt(i));
+                }
+            }
+
+        }
+
+        boolean withinBoard(int x, int y, char direction, String word){
+            boolean withinBoard = true;
+
+            if( (x > 15 || x < 1) || (y > 15 || y < 1) )
+            {
+                withinBoard = false;
+            }
+
+            if(direction == 'V')
+            {
+                if((word.length() + x) > 15)
+                {
+                    withinBoard = false;
+                }
+            }else{
+                if((word.length() + y) > 15)
+                {
+                    withinBoard = false;
+                }
+            }
+
+            return withinBoard;
+        }
+
+        boolean necessaryLetters(String word, Player player){
+
+            boolean hasLetters = false;
+
+            for(int i = 0; i <= word.length()-1; i++)
+            {
+                if(player.getFrameP().checkLettersInFrame(word.charAt(i)))
+                {
+                    hasLetters = true;
+                }else
+                {
+                    hasLetters = false;
+                }
+            }
+            return hasLetters;
+        }
+
+        boolean atLeastOneTileFromFrame(int x,int y){
+            boolean letterInFrame = true;
+
+
+
+
+            return letterInFrame;
+        }
+
     }
-
 }
