@@ -44,8 +44,8 @@ public class Pattern {
         */
 
         return new int[][]{
-                {x, y},  {reflect1D(x), y},
-                {y, x},  {x, reflect1D(y)}
+                {x, y},  {reflect1D(x), y}, {reflect1D(x), reflect1D(y)},
+                {y, x},  {x, reflect1D(y)}, {reflect1D(y), reflect1D(x)}
         };
     }
 
