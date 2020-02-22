@@ -319,23 +319,23 @@ public class Board {
      */
     private void fillSquare(String word, int row, int column, char direction){
 
-        if(direction == 'D')
-        {
-            for(int i = 0; i < word.length(); i++)
-            {
-                setSquare(row,column,word.charAt(i));
-                row++;
-            }
-        }
-        else if(direction == 'A')
-        {
-            for(int i = 0; i < word.length(); i++)
-            {
-                setSquare(row,column,word.charAt(i));
-                column++;
-            }
-        }
+        switch(direction){
+            case 'D':
+                for(int i = 0; i < word.length(); i++)
+                {
+                    setSquare(row,column,word.charAt(i));
+                    row++;
+                }
+                break;
 
+            case 'A':
+                for(int i = 0; i < word.length(); i++)
+                {
+                    setSquare(row,column,word.charAt(i));
+                    column++;
+                }
+                break;
+        }
     }
 
     /*
@@ -374,6 +374,9 @@ public class Board {
         for(int i = 0; i <= word.length()-1; i++)
         {
             hasLetters = player.getFrameP().checkLettersInFrame(word.charAt(i));
+            if(!hasLetters){
+                break;
+            }
         }
         return hasLetters;
     }
