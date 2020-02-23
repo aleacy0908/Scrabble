@@ -228,7 +228,7 @@ public class Board {
         Scanner letter = new Scanner(System.in);
         int x,y;
         char direction;
-        String word = "";
+        String word;
 
         //Loop doesn't break until the player has selected and placed a word on the board
         while(!playerFinished)
@@ -321,7 +321,7 @@ public class Board {
             method to get rid of the used tiles. The tiles that were used are then placed onto
             the board and the number of words on the board is incremented
              */
-            ArrayList<Character> tiles = new ArrayList<Character>();
+            ArrayList<Character> tiles = new ArrayList<>();
 
             for(int i = 0; i<word.length(); i++)
             {
@@ -392,7 +392,7 @@ public class Board {
     private boolean withinBoard(int x, int y, char direction, String word){
 
         boolean withinBounds = true;
-        int length = 0;
+        int length;
 
         if( (x > 15 || x < 1) || (y > 15 || y < 1) )
         {
