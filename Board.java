@@ -443,7 +443,10 @@ public class Board {
 
                 for(int i = 0; i < word.length(); i++){
                     if(sqr.is_occupied){
-                        if( !(word.charAt(i) == sqr.getTile()) ){
+                        if( (word.charAt(i) == sqr.getTile()) ){
+                            result = false;
+                            break;
+                        }else{
                             result = true;
                         }
                     }
@@ -453,13 +456,16 @@ public class Board {
 
             case 'A':
 
-                for(int i = 0; i < word.length(); i++){
-                    if(sqr.is_occupied){
-                        if( !(word.charAt(i) == sqr.getTile()) ){
+                for(int i = 0; i < word.length(); i++) {
+                    if (sqr.is_occupied) {
+                        if ((word.charAt(i) == sqr.getTile())) {
+                            result = false;
+                            break;
+                        } else {
                             result = true;
                         }
                     }
-                    sqr = getSquare(x,y++);
+                    sqr = getSquare(x, y++);
                 }
                 break;
         }
