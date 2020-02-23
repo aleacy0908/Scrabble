@@ -157,12 +157,14 @@ public class Board {
         int i, j;
 
         System.out.println("");
-        System.out.println("                                       SCRABBLE BOARD                                         ");
+        System.out.println("                                       SCRABBLE BOARD                " +
+                "                         ");
 
 
         for (i = 1; i <= B_ROWS; i++) {
             System.out.println("");
-            System.out.print("  _________________________________________________________________________________________________________\n");
+            System.out.print("  ________________________________________________________" +
+                    "_________________________________________________\n");
 
             for (j = 1; j <= B_COLS; j++) {
 
@@ -203,7 +205,8 @@ public class Board {
             }
         }
         System.out.println("");
-        System.out.print("  _________________________________________________________________________________________________________\n");
+        System.out.print("  ______________________________________________________________________" +
+                "___________________________________\n");
 
 
     }
@@ -235,7 +238,8 @@ public class Board {
             player.getFrameP().displayFrame();
             word = playerSelection.next().toUpperCase();
 
-            //If the chosen word doesnt contain letters from a players frame, the player must chose a different word
+            //If the chosen word doesn't contain letters from a players frame,
+            //the player must chose a different word
             if(!necessaryLetters(word,player))
             {
                 System.out.println("Invalid word picked");
@@ -252,20 +256,28 @@ public class Board {
             x = square.nextInt();
             y = square.nextInt();
 
-            //The player must enter A or D for whether they want their word to across or downwards on the board
+            //The player must enter A or D for whether they want their word to
+            //across or downwards on the board
             System.out.println("Which direction do you want the word to go? Across(A)/Downwards(D)");
             direction = dir.next().toUpperCase().charAt(0);
 
-            //If they dont enter A or D, the player is told as such
+            //If they don't enter A or D, the player is told as such
             if((direction != 'D') && (direction != 'A')){
                 System.out.println("Invalid direction entered");
                 continue;
             }
 
             //Checks to make sure the first word is placed at the centre of the board
+            //If not the first word then it is checked to see if it connects to another
+            //word on the board
             if(numOfWordsOnBoard == 0) {
-                if (x != 8 && y != 8) {
+                if (!firstWord(x,y,word,direction)) {
                     System.out.println("First played word must start at the centre of the board");
+                    continue;
+                }
+            }else{
+                if(!connectsToWord(x,y,word,direction)){
+                    System.out.println("New word must be connected to another word");
                     continue;
                 }
             }
@@ -276,6 +288,7 @@ public class Board {
                 System.out.println("Out of board bounds");
                 continue;
             }
+
 
             //Checks if the given word conflicts with any other words on the board
             if(conflicts(x,y,word,direction)){
@@ -382,20 +395,19 @@ public class Board {
     }
 
     /*
-    This checks if the new word to be placed is going to conflict with
-    any other words on the board. Depending on the direction of the new
-    word, all the squares the new word will occupy are checked to see if
-    they are already occupied and if they are then false is returned
+    This method is checking if a new word is going to connect
+    to another word if its not the first word going to be placed
+    onto the board.
      */
-    private boolean conflicts(int x,int y, String word, char direction){
-        boolean result = false;
+    private boolean connectsToWord(int x,int y, String word, char direction){
         Square sqr = getSquare(x,y);
+        boolean connectsToWord = false;
 
         switch(direction){
             case 'D':
                 for(int i = 0; i < word.length(); i++){
                     if(sqr.is_occupied){
-                        result = true;
+                        connectsToWord = true;
                     }
                     sqr = getSquare(x++,y);
                 }
@@ -404,7 +416,48 @@ public class Board {
             case 'A':
                 for(int i = 0; i < word.length(); i++){
                     if(sqr.is_occupied){
-                        result = true;
+                        connectsToWord = true;
+                    }
+                    sqr = getSquare(x,y++);
+                }
+                break;
+        }
+
+        return connectsToWord;
+    }
+
+    /*
+    This checks if the new word to be placed is going to conflict with
+    any other words on the board. Depending on the direction of the new
+    word, all the squares the new word will occupy are checked to see if
+    they are already occupied. If a square is occupied, its checked
+    to see if the letter within that square matches the letter that would've
+    been placed into that square.
+     */
+    private boolean conflicts(int x,int y, String word, char direction){
+        boolean result = false;
+        Square sqr = getSquare(x,y);
+
+        switch(direction){
+            case 'D':
+
+                for(int i = 0; i < word.length(); i++){
+                    if(sqr.is_occupied){
+                        if( !(word.charAt(i) == sqr.getTile()) ){
+                            result = true;
+                        }
+                    }
+                    sqr = getSquare(x++,y);
+                }
+                break;
+
+            case 'A':
+
+                for(int i = 0; i < word.length(); i++){
+                    if(sqr.is_occupied){
+                        if( !(word.charAt(i) == sqr.getTile()) ){
+                            result = true;
+                        }
                     }
                     sqr = getSquare(x,y++);
                 }
@@ -412,5 +465,39 @@ public class Board {
         }
 
         return result;
+    }
+
+    /*
+    This check is used for when a word being placed is the first.
+    If this word doesn't lie in the centre at any point, the check
+    fails
+     */
+    private boolean firstWord(int row, int column, String word, char direction){
+
+        boolean isOnCentre = false;
+
+        switch(direction){
+            case 'D':
+
+                for(int i = 0; i < word.length(); i++){
+                    if ((i + row) == 8) {
+                        isOnCentre = true;
+                        break;
+                    }
+                }
+                break;
+
+            case 'A':
+
+                for(int i = 0; i < word.length(); i++){
+                    if ((i + column) == 8) {
+                        isOnCentre = true;
+                        break;
+                    }
+                }
+                break;
+        }
+
+        return isOnCentre;
     }
 }
