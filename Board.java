@@ -211,6 +211,12 @@ public class Board {
 
 
     }
+    
+     void ResetBoard()
+    {
+        BOARD = new Square[B_ROWS][B_COLS];
+        DisplayBoard();
+    }
 
     //This allows the game to keep track of the amount of words currently on the board
     int numOfWordsOnBoard = 0;
