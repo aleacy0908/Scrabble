@@ -216,7 +216,7 @@ public class Board {
 
     /*
     This method is where the player is given
-    the ability to place a given word onto the
+    the ability to place a word onto the
     scrabble board.
      */
     void tileSelection(Player player){
@@ -230,18 +230,15 @@ public class Board {
         char direction;
         String word = "";
 
-        //This while loop doesn't break unless the player has selected and placed a word on the board
+        //Loop doesn't break until the player has selected and placed a word on the board
         while(!playerFinished)
         {
             System.out.println("Select the tiles you wish to create a word with:");
             player.getFrameP().displayFrame();
             word = playerSelection.next().toUpperCase();
 
-            //If the chosen word doesn't contain letters from a players frame,
-            //the player must chose a different word
-            if(!necessaryLetters(word,player))
-            {
-                System.out.println("Invalid word picked");
+            if(word.length() < 2){
+                System.out.println("Word must have 2 letters or more");
                 continue;
             }
 
@@ -251,28 +248,41 @@ public class Board {
                 {
                     if(word.charAt(i) == '_'){
                         System.out.println("Please select a letter you would like to enter for '_':");
-                        word = word.replaceFirst("_",letter.next().toUpperCase());
+                        String tmp = letter.next().toUpperCase();
+                        word = word.replaceFirst("_",tmp);
+                        player.getFrameP().frame.remove(Character.valueOf('_'));
+                        player.getFrameP().frame.add(tmp.charAt(0));
                     }
                 }
             }
-
 
             System.out.println("Where would you like to place the word on the board? (ROW COLUMN)");
             x = square.nextInt();
             y = square.nextInt();
 
-            //The player must enter A or D for whether they want their word to
-            //across or downwards on the board
+            //The player must enter chose A or D for whether they want
+            //their word to go across or downwards on the board
             System.out.println("Which direction do you want the word to go? Across(A)/Downwards(D)");
             direction = dir.next().toUpperCase().charAt(0);
 
-            //If they don't enter A or D, the player is told as such
+            //If they don't enter A or D, the player must try again
             if((direction != 'D') && (direction != 'A')){
                 System.out.println("Invalid direction entered");
                 continue;
             }
 
-            //Checks to make sure the first word is placed at the centre of the board
+            /*
+            This calls checks to ensure the player is
+            using at least one letter from their frame
+            rather than only using words from the board
+             */
+            if(!necessaryLetters(word,player,x,y,direction))
+            {
+                System.out.println("Invalid word picked");
+                continue;
+            }
+
+            //This makes sure the first word is placed at the centre of the board
             //If not the first word then it is checked to see if it connects to another
             //word on the board
             if(numOfWordsOnBoard == 0) {
@@ -287,7 +297,8 @@ public class Board {
                 }
             }
 
-            //Checks if the given word goes out of the boards bounds or if a invalid grid ref was given
+            //Checks if the given word goes outside of the boards bounds
+            //or if a invalid grid ref was given
             if(!withinBoard(x,y,direction,word))
             {
                 System.out.println("Out of board bounds");
@@ -326,86 +337,150 @@ public class Board {
     }
 
     /*
-    If the player chose to have to word be placed across on the board then
-    the column is incremented each time a letter is placed on the board.
-    If the player chose to have the word be place downwards on the board
-    then the row is incremented each time a letter is placed. If a letter
+    If the player chooses to have a word be placed across on the board then
+    the column value is incremented each time a letter is placed on the board.
+    If the player chooses to have the word be place downwards on the board
+    then the row value is incremented each time a letter is placed. If a letter
     is already present on the board, it is removed from the list of letters
-    that are going ot be removed from a players frame.
+    that are going to be removed from a players frame.
      */
-    private ArrayList<Character> fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles){
+    private void fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles){
 
-        Square sqr = getSquare(row,column);
+        Square sqr;
 
         switch(direction){
             case 'D':
                 for(int i = 0; i < word.length(); i++)
                 {
-                    setSquare(row,column,word.charAt(i));
-                    if(sqr.getTile() == word.charAt(i)){
-                        tiles.remove(i);
+                    sqr = getSquare(row,column);
+                    if(sqr.is_occupied){
+                        if(sqr.getTile() == word.charAt(i)){
+                            tiles.remove(Character.valueOf(word.charAt(i)));
+                        }
                     }
+                    setSquare(row,column,word.charAt(i));
                     row++;
+
                 }
                 break;
 
             case 'A':
                 for(int i = 0; i < word.length(); i++)
                 {
-                    setSquare(row,column,word.charAt(i));
-                    if(sqr.getTile() == word.charAt(i)){
-                        tiles.remove(i);
+                    sqr = getSquare(row,column);
+                    if(sqr.is_occupied){
+                        if(sqr.getTile() == word.charAt(i)){
+                            tiles.remove(Character.valueOf(word.charAt(i)));
+                        }
                     }
+                    setSquare(row,column,word.charAt(i));
                     column++;
+
                 }
                 break;
         }
-
-        return tiles;
     }
 
     /*
     This method performs two checks. First whether the given grid ref
     is within the bounds of the scrabble board. If it passes that first
-    check then the total number of letters in the word is added to the
-    grid ref depending on the direction the word is going to be placed.
-    If the total from adding the row/column number and the number of
-    letters in the word exceed the bounds of the board, false is returned
+    check then the length of the word is added to the row/column value
+    depending on the direction the word is going to be placed.
+    If the total from adding the row/column number and the length of
+    the word exceed the bounds of the board, the check fails.
      */
     private boolean withinBoard(int x, int y, char direction, String word){
 
+        boolean withinBounds = true;
+        int length = 0;
+
         if( (x > 15 || x < 1) || (y > 15 || y < 1) )
         {
-            return false;
+            withinBounds = false;
         }
 
         switch(direction){
             case 'D':
-                return (word.length() + x) <= 15;
+                length = (x + word.length()) - 1;
+                if(length > 15){
+                    withinBounds = false;
+                }
+                break;
 
             case 'A':
-                return (word.length() + y) <= 15;
+                length = (y + word.length()) - 1;
+                if(length > 15){
+                    withinBounds = false;
+                }
+                break;
         }
 
-        return true;
+        return withinBounds;
     }
 
     /*
-    This simply checks is the players new word is using letters from
-    their frame and not random letters of their choosing.
+    This method is used for making sure that if a word is being placed
+    where a word already exists, then that new word should be using
+    letters from both the players frame and the board. It is
+    used to prevent a player from creating a word already
+    on the board and placing it in the same place as the original
      */
-    private boolean necessaryLetters(String word, Player player){
+    private boolean usesOnlyFromBoard(String word, int row, int column, char direction){
+        boolean onlyUsingLettersOnBoard = false;
+        Square sqr;
+        int count = 0;
 
-        boolean hasLetters = false;
+        switch(direction){
+            case 'D':
+                for(int i = 0; i < word.length(); i++){
+                    sqr = getSquare(row++,column);
+                    if(sqr.is_occupied){
+                        if(sqr.getTile() == word.charAt(i)){
+                            count++;
+                        }
+                    }
+                }
+                break;
+
+            case 'A':
+                for(int i = 0; i < word.length(); i++){
+                    sqr = getSquare(row,column++);
+                    if(sqr.is_occupied){
+                        if(sqr.getTile() == word.charAt(i)){
+                            count++;
+                        }
+                    }
+                }
+                break;
+        }
+
+        if(count == word.length()){
+            onlyUsingLettersOnBoard = true;
+        }
+
+        return onlyUsingLettersOnBoard;
+    }
+
+    /*
+    This method is used to make sure a player is using at least one letter from
+    their frame. If a letter isn't in a players frame, its checked to see
+    if its on the board already. If the letter isn't found on the board
+    or in the players frame then the check fails.
+     */
+    private boolean necessaryLetters(String word, Player player, int row, int column, char direction){
+
+        boolean usesLettersFromFrame = true;
 
         for(int i = 0; i <= word.length()-1; i++)
         {
-            hasLetters = player.getFrameP().checkLettersInFrame(word.charAt(i));
-            if(!hasLetters){
-                break;
-            }
+            usesLettersFromFrame = player.getFrameP().checkLettersInFrame(word.charAt(i));
         }
-        return hasLetters;
+
+        if(usesOnlyFromBoard(word,row,column,direction)){
+            usesLettersFromFrame = false;
+        }
+
+        return usesLettersFromFrame;
     }
 
     /*
@@ -490,9 +565,9 @@ public class Board {
     }
 
     /*
-    This check is used for when a word being placed is the first.
-    If this word doesn't lie in the centre at any point, the check
-    fails
+    This checks if the new word is the first one to be placed onto
+    the board. If this word doesn't lie on the centre at any point,
+    the check fails
      */
     private boolean firstWord(int row, int column, String word, char direction){
 
