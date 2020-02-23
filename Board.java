@@ -222,6 +222,14 @@ public class Board {
      */
     void tileSelection(Player player){
 
+        /*
+        A backup is made of the players frame before selecting
+        a frame so it can be reverted if they fail any of the checks.
+        Needed for when a player uses a "_" tile as that tile is
+        replaced so it can work with the checks
+         */
+        ArrayList<Character> backup = new ArrayList<>(player.getFrameP().getFrame());
+
         boolean playerFinished = false;
         Scanner playerSelection = new Scanner(System.in);
         Scanner square = new Scanner(System.in);
@@ -269,17 +277,21 @@ public class Board {
             //If they don't enter A or D, the player must try again
             if((direction != 'D') && (direction != 'A')){
                 System.out.println("Invalid direction entered");
+                player.getFrameP().frame.clear();
+                player.getFrameP().frame.addAll(backup);
                 continue;
             }
 
             /*
             This calls checks to ensure the player is
             using at least one letter from their frame
-            rather than only using words from the board
+            rather than only using words from the board.
              */
             if(!necessaryLetters(word,player,x,y,direction))
             {
                 System.out.println("Invalid word picked");
+                player.getFrameP().frame.clear();
+                player.getFrameP().frame.addAll(backup);
                 continue;
             }
 
@@ -289,11 +301,15 @@ public class Board {
             if(numOfWordsOnBoard == 0) {
                 if (!firstWord(x,y,word,direction)) {
                     System.out.println("First played word must start at the centre of the board");
+                    player.getFrameP().frame.clear();
+                    player.getFrameP().frame.addAll(backup);
                     continue;
                 }
             }else{
                 if(!connectsToWord(x,y,word,direction)){
                     System.out.println("New word must be connected to another word");
+                    player.getFrameP().frame.clear();
+                    player.getFrameP().frame.addAll(backup);
                     continue;
                 }
             }
@@ -303,6 +319,8 @@ public class Board {
             if(!withinBoard(x,y,direction,word))
             {
                 System.out.println("Out of board bounds");
+                player.getFrameP().frame.clear();
+                player.getFrameP().frame.addAll(backup);
                 continue;
             }
 
@@ -310,8 +328,11 @@ public class Board {
             //Checks if the given word conflicts with any other words on the board
             if(conflicts(x,y,word,direction)){
                 System.out.println("New word on given grid ref conflicts with another word on the board");
+                player.getFrameP().frame.clear();
+                player.getFrameP().frame.addAll(backup);
                 continue;
             }
+
 
 
             System.out.println("Word placed : " + word);
