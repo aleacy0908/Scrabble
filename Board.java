@@ -157,14 +157,14 @@ public class Board {
         int i, j;
 
         System.out.println("");
-        System.out.println("                                       SCRABBLE BOARD                " +
+        System.out.println("                                                SCRABBLE BOARD                " +
                 "                         ");
 
 
         for (i = 1; i <= B_ROWS; i++) {
             System.out.println("");
             System.out.print("  ________________________________________________________" +
-                    "_________________________________________________\n");
+                    "__________________________________________________\n");
 
             for (j = 1; j <= B_COLS; j++) {
 
@@ -174,7 +174,7 @@ public class Board {
                 {
                     char tile = sqr.getTile();
 
-                    System.out.print("  | " + tile + " ");
+                    System.out.print("  |  " + tile + " ");
                 }
                 else
                 {
@@ -201,12 +201,13 @@ public class Board {
                     System.out.print("  | " + output + " ");
                 }
 
-
             }
+            System.out.print("  |");
         }
+
         System.out.println("");
         System.out.print("  ______________________________________________________________________" +
-                "___________________________________\n");
+                "____________________________________\n");
 
 
     }
