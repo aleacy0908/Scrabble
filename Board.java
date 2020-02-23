@@ -224,11 +224,10 @@ public class Board {
         boolean playerFinished = false;
         Scanner playerSelection = new Scanner(System.in);
         Scanner square = new Scanner(System.in);
-        Scanner finished = new Scanner(System.in);
         Scanner dir = new Scanner(System.in);
         Scanner letter = new Scanner(System.in);
         int x,y;
-        char done,direction;
+        char direction;
         String word = "";
 
         //This while loop doesn't break unless the player has selected and placed a word on the board
@@ -248,9 +247,15 @@ public class Board {
 
             //Allows the player to add a letter of their choice
             if(word.contains("_")){
-                System.out.println("Please select a letter you would like to enter for '_':");
-                word = word.replace('_',letter.next().toUpperCase().charAt(0));
+                for(int i=0; i < word.length(); i++)
+                {
+                    if(word.charAt(i) == '_'){
+                        System.out.println("Please select a letter you would like to enter for '_':");
+                        word = word.replaceFirst("_",letter.next().toUpperCase());
+                    }
+                }
             }
+
 
             System.out.println("Where would you like to place the word on the board? (ROW COLUMN)");
             x = square.nextInt();
@@ -297,9 +302,7 @@ public class Board {
             }
 
 
-            System.out.println("word chosen : " + word);
-            System.out.println("Is this the word you would like to place on the board? Y/N");
-            done = finished.next().toUpperCase().charAt(0);
+            System.out.println("Word placed : " + word);
 
             /*
             Once the player has chosen their word and it has passed all the necessary checks,
@@ -307,20 +310,18 @@ public class Board {
             method to get rid of the used tiles. The tiles that were used are then placed onto
             the board and the number of words on the board is incremented
              */
-            if(done == 'Y')
+            ArrayList<Character> tiles = new ArrayList<Character>();
+
+            for(int i = 0; i<word.length(); i++)
             {
-                ArrayList<Character> tiles = new ArrayList<Character>();
-
-                for(int i = 0; i<word.length(); i++)
-                {
-                    tiles.add(word.charAt(i));
-                }
-                player.getFrameP().removeFromFrame(tiles);
-                fillSquare(word,x,y,direction);
-
-                numOfWordsOnBoard++;
-                playerFinished = true;
+                tiles.add(word.charAt(i));
             }
+            fillSquare(word, x, y, direction, tiles);
+            player.getFrameP().removeFromFrame(tiles);
+
+            numOfWordsOnBoard++;
+            playerFinished = true;
+
         }
     }
 
@@ -328,15 +329,22 @@ public class Board {
     If the player chose to have to word be placed across on the board then
     the column is incremented each time a letter is placed on the board.
     If the player chose to have the word be place downwards on the board
-    then the row is incremented each time a letter is placed.
+    then the row is incremented each time a letter is placed. If a letter
+    is already present on the board, it is removed from the list of letters
+    that are going ot be removed from a players frame.
      */
-    private void fillSquare(String word, int row, int column, char direction){
+    private ArrayList<Character> fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles){
+
+        Square sqr = getSquare(row,column);
 
         switch(direction){
             case 'D':
                 for(int i = 0; i < word.length(); i++)
                 {
                     setSquare(row,column,word.charAt(i));
+                    if(sqr.getTile() == word.charAt(i)){
+                        tiles.remove(i);
+                    }
                     row++;
                 }
                 break;
@@ -345,10 +353,15 @@ public class Board {
                 for(int i = 0; i < word.length(); i++)
                 {
                     setSquare(row,column,word.charAt(i));
+                    if(sqr.getTile() == word.charAt(i)){
+                        tiles.remove(i);
+                    }
                     column++;
                 }
                 break;
         }
+
+        return tiles;
     }
 
     /*
@@ -366,11 +379,12 @@ public class Board {
             return false;
         }
 
-        if(direction == 'D')
-        {
-            return (word.length() + x) <= 15;
-        }else if(direction == 'A'){
-            return (word.length() + y) <= 15;
+        switch(direction){
+            case 'D':
+                return (word.length() + x) <= 15;
+
+            case 'A':
+                return (word.length() + y) <= 15;
         }
 
         return true;
@@ -400,25 +414,27 @@ public class Board {
     onto the board.
      */
     private boolean connectsToWord(int x,int y, String word, char direction){
-        Square sqr = getSquare(x,y);
+        Square sqr;
         boolean connectsToWord = false;
 
         switch(direction){
             case 'D':
                 for(int i = 0; i < word.length(); i++){
+
+                    sqr = getSquare(x++,y);
                     if(sqr.is_occupied){
                         connectsToWord = true;
                     }
-                    sqr = getSquare(x++,y);
                 }
                 break;
 
             case 'A':
                 for(int i = 0; i < word.length(); i++){
+
+                    sqr = getSquare(x,y++);
                     if(sqr.is_occupied){
                         connectsToWord = true;
                     }
-                    sqr = getSquare(x,y++);
                 }
                 break;
         }
@@ -436,36 +452,36 @@ public class Board {
      */
     private boolean conflicts(int x,int y, String word, char direction){
         boolean result = false;
-        Square sqr = getSquare(x,y);
+        Square sqr;
 
         switch(direction){
             case 'D':
 
                 for(int i = 0; i < word.length(); i++){
+
+                    sqr = getSquare(x++,y);
                     if(sqr.is_occupied){
                         if( (word.charAt(i) == sqr.getTile()) ){
                             result = false;
-                            break;
                         }else{
                             result = true;
                         }
                     }
-                    sqr = getSquare(x++,y);
                 }
                 break;
 
             case 'A':
 
                 for(int i = 0; i < word.length(); i++) {
+
+                    sqr = getSquare(x, y++);
                     if (sqr.is_occupied) {
                         if ((word.charAt(i) == sqr.getTile())) {
                             result = false;
-                            break;
                         } else {
                             result = true;
                         }
                     }
-                    sqr = getSquare(x, y++);
                 }
                 break;
         }
