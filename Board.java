@@ -11,9 +11,7 @@ import java.util.Scanner;
 
 enum SCORE_MULT {NONE, DL, TL, DW, TW};
 
-public class Board {
-
-    private class Square
+class Square
     {
         SCORE_MULT score_multiplier;
 
@@ -55,6 +53,8 @@ public class Board {
         boolean isOccupied() { return this.is_occupied; }
 
     }
+
+public class Board {
 
     //MAIN BOARD
     final short B_ROWS = 15;
