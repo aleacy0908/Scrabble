@@ -157,9 +157,10 @@ public class Board {
         BOARD[x - 1][y - 1].setTile(t);
     }
 
-
+    int i, j;
+    
     public void DisplayBoard() {
-        int i, j;
+  
 
         System.out.println("");
         System.out.println("                                                SCRABBLE BOARD                " +
