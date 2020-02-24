@@ -1,5 +1,8 @@
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
@@ -124,6 +127,125 @@ public class BoardTest {
         assertEquals(x.getTile(), example_tiles[3]);
     }
 
+    @Test
+    public void testSetSquare() {
+        Board board = new Board();
+
+        System.out.println("---- setSquare test ----");
+
+        board.setSquare(8, 8, 'H');
+        char letter = board.getSquare(8, 8).letter;
+
+        assertEquals(letter, 'H');
+        assertNotEquals('U', letter);
+    }
+
+    @Test
+    public void testFirstWord() {
+        Board board = new Board();
+        Player player = new Player("test", 0);
+        String word = "hello";
+        int row = 5;
+        int column = 4;
+        char direction = 'D';
+
+        System.out.println("---- firstWord test ----");
+
+        assertFalse(board.firstWord(row, column, word, direction));
+
+        row = 8;
+        column = 7;
+        direction = 'A';
+        assertTrue(board.firstWord(row, column, word, direction));
+
+
+    }
+
+    @Test
+    public void testConflicts() {
+        Board board = new Board();
+
+        System.out.println("---- conflicts test ----");
+
+        board.setSquare(8, 6, 'H');
+        board.setSquare(8, 7, 'E');
+        board.setSquare(8, 8, 'L');
+        board.setSquare(8, 9, 'L');
+        board.setSquare(8, 10, 'O');
+
+        assertTrue(board.conflicts(8, 7, "WORD", 'A'));
+        assertFalse(board.conflicts(9, 7, "WORD", 'A'));
+
+    }
+
+    @Test
+    public void testConnectsToWord() {
+        Board board = new Board();
+        Player player = new Player("test", 0);
+
+        System.out.println("---- connectsToWord test ----");
+
+        board.setSquare(8, 6, 'H');
+        board.setSquare(8, 7, 'E');
+        board.setSquare(8, 8, 'L');
+        board.setSquare(8, 9, 'L');
+        board.setSquare(8, 10, 'O');
+
+        assertTrue(board.connectsToWord(8, 6, "HELLO", 'D'));
+        assertFalse(board.connectsToWord(9, 6, "HELLO", 'D'));
+    }
+
+    @Test
+    public void testNecessaryLetters() {
+        Board board = new Board();
+        Player player = new Player("test", 0);
+        player.getFrameP().frame.clear();
+        player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', '_', 'D', 'E', 'F'));
+
+        System.out.println("---- necessaryLetters test ----");
+
+        board.setSquare(8, 6, 'H');
+        board.setSquare(8, 7, 'E');
+        board.setSquare(8, 8, 'L');
+        board.setSquare(8, 9, 'L');
+        board.setSquare(8, 10, 'O');
+
+        assertTrue(board.necessaryLetters("WORD",player,8,6,'A'));
+        assertFalse(board.necessaryLetters("FALSE",player,8,6,'A'));
+        assertTrue(board.necessaryLetters("DEW",player,7,6,'D'));
+        assertFalse(board.necessaryLetters("TRUE",player,5,6,'D'));
+    }
+
+    @Test
+    public void testWithinBoard(){
+        Board board = new Board();
+        Player player = new Player("test", 0);
+        player.getFrameP().frame.clear();
+        player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', 'S', 'D', 'E', 'F'));
+
+        System.out.println("---- withinBoard test ----");
+
+        assertFalse(board.withinBoard(12,12,'A',"HELLO"));
+        assertTrue(board.withinBoard(15,11,'A',"HELLO"));
+        assertFalse(board.withinBoard(13,3,'D',"HELLO"));
+        assertTrue(board.withinBoard(8,3,'D',"HELLO"));
+    }
+
+    @Test
+    public void testFillSquare(){
+        Board board = new Board();
+        Player player = new Player("test", 0);
+        player.getFrameP().frame.clear();
+        player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', 'S', 'D', 'E', 'F'));
+
+        System.out.println("---- fillSquare test ----");
+
+        board.tileSelection(player,8,8,'A',"WORD");
+        assertEquals(board.getSquare(8,8).getTile(), 'W');
+        assertEquals(board.getSquare(8,9).getTile(), 'O');
+        assertEquals(board.getSquare(8,10).getTile(), 'R');
+        assertEquals(board.getSquare(8,11).getTile(), 'D');
+    }
 
 
 
