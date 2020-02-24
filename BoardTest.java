@@ -270,7 +270,7 @@ public class BoardTest {
     }
     
     @Test 
-    void TestDisplayBoard ( ) {
+    public void TestDisplayBoard ( ) {
 
         testMessage("Running testDisplayBoard");
 
@@ -281,7 +281,7 @@ public class BoardTest {
     }
     
     @Test
-    void TestResetBoard()
+    public void TestResetBoard()
     {
         testMessage("Running testResetBoard");
 
