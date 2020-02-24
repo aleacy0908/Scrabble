@@ -46,6 +46,15 @@ class Square
 
             return this.letter;
         }
+    
+        void clearTile()
+        {
+            if(this.isOccupied())
+             {
+                 this.letter = ' ';
+                 this.is_occupied = false;
+             }
+        }
 
         SCORE_MULT getMultiplier() { return this.score_multiplier; }
         void       setMultiplier(SCORE_MULT m) { this.score_multiplier = m; }
