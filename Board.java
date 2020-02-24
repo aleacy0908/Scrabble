@@ -49,7 +49,7 @@ class Square
 
         SCORE_MULT getMultiplier() { return this.score_multiplier; }
         void       setMultiplier(SCORE_MULT m) { this.score_multiplier = m; }
-        
+
         boolean isOccupied() { return this.is_occupied; }
 
     }
@@ -140,7 +140,7 @@ public class Board {
         return BOARD[x-1][y-1];
     }
 
-    private void setSquare(int x, int y, char t){
+    void setSquare(int x, int y, char t){
 
         //Error Handle: Invalid Coordinate
         if(x < 1 || x > B_ROWS ||
@@ -211,7 +211,7 @@ public class Board {
 
 
     }
-    
+
      void ResetBoard()
     {
         BOARD = new Square[B_ROWS][B_COLS];
