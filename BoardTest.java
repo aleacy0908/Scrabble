@@ -246,6 +246,32 @@ public class BoardTest {
         assertEquals(board.getSquare(8,10).getTile(), 'R');
         assertEquals(board.getSquare(8,11).getTile(), 'D');
     }
+    
+    @Test 
+    void TestDisplayBoard ( ) {
+
+        Board board = new Board();
+
+        board.DisplayBoard();
+
+    }
+    
+    @Test
+    void TestResetBoard()
+    {
+        Board board = new Board();
+
+        board.setSquare(9, 4, 'J');
+        char letter = board.getSquare(9, 4).letter;
+
+        assertEquals(letter, 'J');
+       
+
+        board.ResetBoard();
+        letter = board.getSquare(9, 4).letter;
+
+        assertEquals(letter, ' ');
+    }
 
 
 
