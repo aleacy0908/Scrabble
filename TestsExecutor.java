@@ -8,7 +8,7 @@ public class TestsExecutor {
 	public static void main(String[] args)
 	{
 		
-		Result resultsBoard = JUnitCore.runClasses(Board.class);
+		Result resultsBoard = JUnitCore.runClasses(BoardTest.class);
 
 		for(Failure f : resultsBoard.getFailures())
 		{
