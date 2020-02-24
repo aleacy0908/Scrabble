@@ -213,9 +213,22 @@ public class Board {
 
     }
 
-    void ResetBoard() {
-        BOARD = new Square[B_ROWS][B_COLS];
-        DisplayBoard();
+   void ResetBoard()
+    {
+
+        for (i = 1; i <= B_ROWS; i++) {
+
+            for (j = 1; j <= B_COLS; j++) {
+
+                Square sqr = getSquare(i, j);
+
+                if (sqr.isOccupied()) {
+                    sqr.clearTile();
+                }
+
+            }
+        }
+
     }
 
     //This allows the game to keep track of the amount of words currently on the board
