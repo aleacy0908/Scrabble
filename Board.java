@@ -136,7 +136,7 @@ public class Board {
         }
     }
 
-    private Square getSquare(int x, int y) {
+    public Square getSquare(int x, int y) {
         //Error Handle: Invalid Coordinate
         if (x < 1 || x > B_ROWS ||
                 y < 1 || y > B_COLS) {
