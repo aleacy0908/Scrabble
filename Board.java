@@ -66,8 +66,8 @@ class Square
 public class Board {
 
     //MAIN BOARD
-    final short B_ROWS = 15;
-    final short B_COLS = 15;
+    private final short B_ROWS = 15;
+    private final short B_COLS = 15;
 
     private Square[][] BOARD = new Square[B_ROWS][B_COLS];
 
@@ -630,4 +630,8 @@ public class Board {
 
         return isOnCentre;
     }
+
+    public int rows() { return B_ROWS; }
+    public int cols() { return B_COLS; }
+
 }
