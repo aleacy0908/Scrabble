@@ -14,10 +14,6 @@ public class Scrabble {
     {
         //--SETUP--
 
-        int[] x = getCoord("HELLO 2 4");
-        System.out.println(x[0]);
-        System.out.println(x[1]);
-
         //Read User Input
         Scanner SCAN = new Scanner(System.in);
 
@@ -54,8 +50,9 @@ public class Scrabble {
 
         int P = 0;
 
-        int[] COORD = new int[2];
+        int[]  COORD = new int[2];
         String WORD;
+        char   DIR;
 
 
         while(!GAME_FINISHED)
@@ -72,12 +69,22 @@ public class Scrabble {
             System.out.print("\n\n\n");
 
             //Player chooses words
-            playerInput = readIn("Enter Word & Loc: ", SCAN);
+            playerInput = readIn("Enter Loc Direction Word: ", SCAN);
 
             //Parse Input
             WORD  = getWord(playerInput);
             COORD = getCoord(playerInput);
+            DIR   = getDirection(playerInput);
 
+            BOARD.tileSelection(playerA, COORD[0], COORD[1], DIR, WORD);
+
+            //Check if word uses letters in the frame
+            boolean lettersInFrame = frames[P].checkLettersInFrame(WORD);
+
+            //Check if word is somewhat complete on board
+
+            //Check there's enough space on the board
+            boolean enoughSpace = WORD.length() + COORD[0] <= BOARD.rows();
 
             //If so, place on the board
 
@@ -104,23 +111,18 @@ public class Scrabble {
 
     public static String getWord(String s)
     {
-        /*Return First Word In String
-          HELLO 0 5. HELLO is from index 0 => index of
-          the space. */
-        return s.substring(0, s.indexOf(' '));
+        return s.substring(6);
+    }
+
+    public static char getDirection(String s)
+    {
+        return s.charAt(4);
     }
 
     public static int[] getCoord(String s)
     {
-        int space = s.indexOf(' ');
-
-        //Error Handle
-        if(space == -1)
-            throw new IllegalArgumentException("Invalid Input");
-
-        //Find Two Coords
-        char x = s.charAt(s.indexOf(' ') + 1);
-        char y = s.charAt(s.indexOf(' ') + 3);
+        char x = s.charAt(0);
+        char y = s.charAt(2);
 
         return new int[] {
                 Character.getNumericValue(x), Character.getNumericValue(y) };
