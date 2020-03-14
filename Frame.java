@@ -102,15 +102,24 @@ public class Frame {
     This is an overloaded function to allow a
     check for a specific letter in a players frame
     */
-    public boolean checkLettersInFrame(char c)
+    public boolean checkLettersInFrame(String s)
     {
         boolean containsLetter = false;
 
-        if(this.frame.contains(c)){
-            containsLetter = true;
+        for(int i = 0; i < s.length(); i++)
+        {
+            if(!this.frame.contains(s.charAt(i))){
+                containsLetter = false;
+                break;
+            }
         }
 
         return containsLetter;
+    }
+
+    public boolean checkLettersInFrame(char c)
+    {
+        return this.frame.contains(c);
     }
 
     //Allows for the frame to be displayed
