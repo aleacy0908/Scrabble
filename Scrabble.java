@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-enum Turn {TURN_A, TURN_B};
-
 public class Scrabble {
 
     // Allow two humans to play scrabble
@@ -41,39 +39,63 @@ public class Scrabble {
         //Todo: While(!GAME_EXIT)
 
         //Increments Each Turn
-        int TURN = -1;
+        int TURN = 0;
 
         //0 or 1 => Represents which player's
         //move it is
-        int P;
+        int P = 0;
+
+        /*
+        These variables hold the separate
+        values for the coordinates, word
+        and direction the user entered */
 
         int[]  COORD = new int[2];
         String WORD;
         char   DIR;
 
+        //Current # Of Words
+        int wordsOnBoard = 0;
+
+        /*
+        New Move
+
+        True: If game can move onto
+        the next move
+
+        False: If same user must enter
+        a word again */
+
+        boolean newMove = true;
+
+        //Current Name Of Who's
+        //Turn It Is
+        String pName;
+
 
         while(!GAME_FINISHED)
         {
-            //Next Turn
-            TURN++;
-
-            //Switch Player (0 or 1)
-            P = TURN % 2;
-
-            System.out.println("PLAYER " + P);
+            //Which Player's Turn Is It?
+            pName = (P == 0)? players[0].nameP() : players[1].nameP();
 
             //Show Player The Board
-            BOARD.DisplayBoard();
-            System.out.print("\n\n\n");
+            if(newMove)
+            {
+                //Print This Player's Name
+                System.out.println("PLAYER " + pName);
 
-            //Display the frame to player
-            System.out.println("FRAME");
-            players[P].getFrameP().displayFrame();
-            System.out.print("\n\n\n");
+                BOARD.DisplayBoard();
+                System.out.print("\n\n\n");
+
+                //Display the frame to player
+                System.out.println("FRAME");
+                players[P].getFrameP().displayFrame();
+                System.out.print("\n\n\n");
+            }
 
             //Player chooses words
-            System.out.println("Next Move!");
-            playerInput = readIn("Format: <Coord> <Dir> <Word>: ", SCAN);
+            System.out.println(pName + ", Please Enter A Word.");
+            playerInput = readIn("Use Format: <Coord> <Dir> <Word>: ", SCAN);
 
             //Parse Input
             WORD  = getWord(playerInput);
@@ -81,7 +103,17 @@ public class Scrabble {
             DIR   = getDirection(playerInput);
 
             //Place Tiles On Board
-            BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD);
+            newMove = BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD, wordsOnBoard);
+
+            //Check if the user needs to enter a word again
+            if(newMove)
+            {
+                //Next Turn
+                TURN++;
+
+                //Switch Player (0 or 1)
+                P = TURN % 2;
+            }
 
         }
     }

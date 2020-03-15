@@ -232,15 +232,12 @@ public class Board {
 
     }
 
-    //This allows the game to keep track of the amount of words currently on the board
-    int numOfWordsOnBoard = 0;
-
     /*
     This method is where the player is given
     the ability to place a word onto the
     scrabble board.
      */
-    void tileSelection(Player player, int row, int column, char direction, String word) {
+    boolean tileSelection(Player player, int row, int column, char direction, String word, int numOfWordsOnBoard) {
 
         /*
         A backup is made of the players frame before selecting
@@ -261,8 +258,6 @@ public class Board {
                 break;
             }
 
-            System.out.println(1);
-
             //Allows the player to add a letter of their choice
             if (word.contains("_")) {
                 for (int i = 0; i < word.length(); i++) {
@@ -276,14 +271,12 @@ public class Board {
                 }
             }
 
-            System.out.println(2);
-
             //If the user didn't enter A or D, the player must try again
             if ((direction != 'D') && (direction != 'A')) {
                 System.out.println("Invalid direction entered");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
-                break;
+                return false;
             }
 
             /*
@@ -295,7 +288,7 @@ public class Board {
                 System.out.println("Invalid word picked");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
-                break;
+                return false;
             }
 
             //This makes sure the first word is placed at the centre of the board
@@ -306,14 +299,14 @@ public class Board {
                     System.out.println("First played word must start at the centre of the board");
                     player.getFrameP().frame.clear();
                     player.getFrameP().frame.addAll(backup);
-                    break;
+                    return false;
                 }
             } else {
                 if (!connectsToWord(row, column, word, direction)) {
                     System.out.println("New word must be connected to another word");
                     player.getFrameP().frame.clear();
                     player.getFrameP().frame.addAll(backup);
-                    break;
+                    return false;
                 }
             }
 
@@ -323,7 +316,7 @@ public class Board {
                 System.out.println("Out of board bounds");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
-                break;
+                return false;
             }
 
 
@@ -332,7 +325,7 @@ public class Board {
                 System.out.println("New word on given grid ref conflicts with another word on the board");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
-                break;
+                return false;
             }
 
 
@@ -356,6 +349,8 @@ public class Board {
             playerFinished = true;
 
         }
+
+        return true;
     }
 
     /*

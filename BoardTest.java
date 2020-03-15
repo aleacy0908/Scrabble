@@ -262,7 +262,7 @@ public class BoardTest {
         player.getFrameP().frame.clear();
         player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', 'S', 'D', 'E', 'F'));
 
-        board.tileSelection(player,8,8,'A',"WORD");
+        board.tileSelection(player,8,8,'A',"WORD", 0);
         assertEquals(board.getSquare(8,8).getTile(), 'W');
         assertEquals(board.getSquare(8,9).getTile(), 'O');
         assertEquals(board.getSquare(8,10).getTile(), 'R');
