@@ -48,14 +48,23 @@ public class Frame {
     The letters present inside the array c will be removed from
     the frame. addToFrame is called to refill the frame.
     */
+    public void removeFromFrame(String list)
+    {
+        for (int i = 0; i < list.length(); i++) {
+            this.frame.remove(list.charAt(i));
+        }
+
+        addToFrame();
+    }
+
     public void removeFromFrame(ArrayList<Character> list)
     {
-        for (Character c : list) {
+        for(Character c : list)
+        {
             this.frame.remove(c);
         }
 
         addToFrame();
-
     }
 
     /*
@@ -84,11 +93,15 @@ public class Frame {
     */
     public boolean checkLettersInFrame()
     {
+        System.out.println("Checking Letters");
+
         boolean containsLetter = true;
 
         for(char c : this.frame){
             Matcher m = p.matcher(Character.toString(c));
             boolean letter = m.matches();
+
+            System.out.println("MATCHER: " + letter);
 
             if(!letter){
                 containsLetter = false;
@@ -104,20 +117,24 @@ public class Frame {
     */
     public boolean checkLettersInFrame(String s)
     {
-        boolean containsLetter = false;
+        boolean containsLetter = true;
+        System.out.println("Checking Letter");
 
         for(int i = 0; i < s.length(); i++)
         {
+            System.out.println("CHECKS LETTERS: " + i);
             if(!this.frame.contains(s.charAt(i))){
+                System.out.println("FALSE");
                 containsLetter = false;
                 break;
             }
         }
 
+        System.out.println("COntains: " + containsLetter);
         return containsLetter;
     }
 
-    public boolean checkLettersInFrame(char c)
+    public boolean checkLettersInFrame(Character c)
     {
         return this.frame.contains(c);
     }
