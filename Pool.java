@@ -4,34 +4,15 @@ import java.util.HashMap;
 
 public class Pool {
 	
-	
-	//--TILES--
-	final char[] tileNames = {
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 
-			'H', 'I', 'J', 'K', 'L', 'M', 'N', 
-			'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
-			'V', 'W', 'X', 'Y', 'Z', '_'};
-
-	final int[] tilePointsValues = {
-			1, 3, 3,  2, 1,  4, 2, 
-			4, 1, 8,  5, 1,  3, 1, 
-			1, 3, 10, 1, 1,  1, 1, 
-			4, 4, 8,  4, 10, 0 };
-	
-	final int[] amountOfTilesInBeginning = {
-			  9, 2, 2, 4, 12, 2, 3, 
-			  2, 9, 1, 1, 4,  2, 6, 
-			  8, 2, 1, 6, 4,  6, 4,
-			  2, 2, 1, 2, 1,  2 };
-	
-	final int numTilesBeginning = 100;
-	
 	//Tile Pool 
 	//TILE => AMOUNT OF TILES LEFT
 	final Map<Character, int[]> tilePool;
 	
 	//Amount of tiles in the pool
 	private int currPoolSize;
+
+	//Supplies Us With Tile Information
+	GameInfo gi = new GameInfo();
 	
 	Pool()
 	{
@@ -92,12 +73,12 @@ public class Pool {
 		int[] tileInfo;
 		
 		//For Each Tile
-		for(int i = 0; i < tileNames.length; i++)
+		for(int i = 0; i < gi.getTileNames().length; i++)
 		{
 			//Retrieve Tile Info
-			nameOfTile        = tileNames[i];
-			pointsValOfTile   = tilePointsValues[i];
-			amountOfTilesLeft = amountOfTilesInBeginning[i];
+			nameOfTile        = gi.getTileNames()[i];
+			pointsValOfTile   = gi.getTilePointsValues()[i];
+			amountOfTilesLeft = gi.getTilesInBeginning()[i];
 			
 			tileInfo = new int[] {pointsValOfTile, amountOfTilesLeft};
 			
@@ -107,7 +88,7 @@ public class Pool {
 		}
 				
 		//Set the initial size of the pool
-		currPoolSize = numTilesBeginning;
+		currPoolSize = gi.getNumTilesBeginning();
 	}
 	
 	public void resetPool()
@@ -156,7 +137,7 @@ public class Pool {
 		{
 			rand = (int)(Math.random() * ( (maxIndx-minIndx)+1) ) + minIndx;
 			
-			t = tileNames[rand];
+			t = gi.getTileNames()[rand];
 			
 		} while(this.amountOfTileInPool(t) == 0);
 		
