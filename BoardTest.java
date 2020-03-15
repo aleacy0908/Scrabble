@@ -162,7 +162,7 @@ public class BoardTest {
         testMessage("Running testFirstWord");
 
         Board board = new Board();
-        Player player = new Player("test", 0);
+        Player player = new Player("test");
         String word = "hello";
         int row = 5;
         int column = 4;
@@ -202,7 +202,7 @@ public class BoardTest {
         testMessage("Running testConnectsToWord");
 
         Board board = new Board();
-        Player player = new Player("test", 0);
+        Player player = new Player("test");
 
         board.setSquare(8, 6, 'H');
         board.setSquare(8, 7, 'E');
@@ -220,7 +220,7 @@ public class BoardTest {
         testMessage("Running testNecessaryLetters");
 
         Board board = new Board();
-        Player player = new Player("test", 0);
+        Player player = new Player("test");
         player.getFrameP().frame.clear();
         player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', '_', 'D', 'E', 'F'));
 
@@ -242,7 +242,7 @@ public class BoardTest {
         testMessage("Running testWithinBoard");
 
         Board board = new Board();
-        Player player = new Player("test", 0);
+        Player player = new Player("test");
         player.getFrameP().frame.clear();
         player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', 'S', 'D', 'E', 'F'));
 
@@ -258,7 +258,7 @@ public class BoardTest {
         testMessage("Running testFillSquare");
 
         Board board = new Board();
-        Player player = new Player("test", 0);
+        Player player = new Player("test");
         player.getFrameP().frame.clear();
         player.getFrameP().frame = new ArrayList<>(Arrays.asList('W', 'O', 'R', 'S', 'D', 'E', 'F'));
 
