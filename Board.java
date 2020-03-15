@@ -41,7 +41,7 @@ class Square
         char getTile()
         {
             //Error Handling: Calling Func When There's No Tile
-            if(!is_occupied)
+            if(!isOccupied())
                 throw new RuntimeException("No Tile On Square");
 
             return this.letter;
@@ -261,6 +261,8 @@ public class Board {
                 break;
             }
 
+            System.out.println(1);
+
             //Allows the player to add a letter of their choice
             if (word.contains("_")) {
                 for (int i = 0; i < word.length(); i++) {
@@ -273,6 +275,8 @@ public class Board {
                     }
                 }
             }
+
+            System.out.println(2);
 
             //If the user didn't enter A or D, the player must try again
             if ((direction != 'D') && (direction != 'A')) {
@@ -483,7 +487,10 @@ public class Board {
     boolean letterPresentOnBoard(char letter, int x, int y) {
         Square sqr = getSquare(x, y);
 
-        if (sqr.is_occupied) {
+        System.out.println("Checking X: " + x + " Y: " + y);
+        System.out.println("Letters present? " + sqr.isOccupied());
+
+        if (sqr.isOccupied()) {
             return sqr.getTile() == letter;
         }
 
@@ -500,16 +507,24 @@ public class Board {
     boolean necessaryLetters(String word, Player player, int row, int column, char direction) {
 
         boolean usesLettersFromFrame = true;
+        boolean onBoardAlready;
 
         for (int i = 0; i <= word.length() - 1; i++) {
-            usesLettersFromFrame = player.getFrameP().checkLettersInFrame(word.charAt(i));
 
-            if (!usesLettersFromFrame && !letterPresentOnBoard(word.charAt(i), row, column)) {
+            //Check if the letter uses frame letters
+            //or is relying on the letter already
+            //being on the board
+
+            usesLettersFromFrame = player.getFrameP().checkLettersInFrame(word.charAt(i));
+            onBoardAlready = letterPresentOnBoard(word.charAt(i), row, column);
+
+            if (!usesLettersFromFrame && !onBoardAlready) {
                 return false;
             }
         }
 
         if (usesOnlyFromBoard(word, row, column, direction)) {
+            System.out.println("Uses only from board");
             usesLettersFromFrame = false;
         }
 
@@ -568,7 +583,8 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
 
                     sqr = getSquare(x++, y);
-                    if (sqr.is_occupied) {
+
+                    if (sqr.isOccupied()) {
                         if ((word.charAt(i) == sqr.getTile())) {
                             result = false;
                         } else {
