@@ -23,8 +23,8 @@ public class Scrabble {
 
         //Create Two Players
         Player[] players = new Player[] {
-                new Player(playerNameA, 0, new Frame(new Pool())),
-                new Player(playerNameB, 0, new Frame(new Pool()))
+                new Player(playerNameA, new Frame(new Pool())),
+                new Player(playerNameB, new Frame(new Pool()))
         };
 
         //Create The Board
@@ -58,29 +58,30 @@ public class Scrabble {
         int wordsOnBoard = 0;
 
         /*
-        New Move
+        Valid Move Made
 
         True: If game can move onto
         the next move
 
         False: If same user must enter
-        a word again */
+        a word again
 
-        boolean newMove = true;
+        Initialised As True
+        */
+
+        boolean validMoveMade = true;
 
         //Current Name Of Who's
         //Turn It Is
         String pName;
 
 
-        while(!GAME_FINISHED)
-        {
+        while(!GAME_FINISHED) {
             //Which Player's Turn Is It?
-            pName = (P == 0)? players[0].nameP() : players[1].nameP();
+            pName = (P == 0) ? players[0].nameP() : players[1].nameP();
 
             //Show Player The Board
-            if(newMove)
-            {
+            if (validMoveMade) {
                 //Print This Player's Name
                 System.out.println("PLAYER " + pName);
 
@@ -98,24 +99,37 @@ public class Scrabble {
             playerInput = readIn("Use Format: <Coord> <Dir> <Word>: ", SCAN);
 
             //Parse Input
-            WORD  = getWord(playerInput);
+            WORD = getWord(playerInput);
             COORD = getCoord(playerInput);
-            DIR   = getDirection(playerInput);
+            DIR = getDirection(playerInput);
 
-            //Place Tiles On Board
-            newMove = BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD, wordsOnBoard);
+            //True If User Places Valid Word
+            validMoveMade = BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD, wordsOnBoard);
 
-            //Check if the user needs to enter a word again
-            if(newMove)
-            {
-                //Next Turn
-                TURN++;
+            //RETRY MOVE
+            if (!validMoveMade)
+                continue;
 
-                //Switch Player (0 or 1)
-                P = TURN % 2;
-            }
+            //Valid Move, Thus Find Out Word Score
+            int wordScore = players[P].calculateScore(WORD, COORD[0], COORD[1], DIR);
 
+            //Increase Player Score
+            players[P].increaseScore(wordScore);
+
+            //Print Out Score
+            System.out.println(WORD + " Is Worth " + wordScore + " Points!");
+            System.out.println(pName + "'s Score Is " + players[P].getScore() + "\n\n");
+
+            System.out.println("Next Move! Hit Enter When Ready.");
+            readIn("", SCAN);
+
+            //Next Turn
+            TURN++;
+
+            //Switch Player (0 or 1)
+            P = TURN % 2;
         }
+
     }
 
     public static String readIn(String txt, Scanner inp)
