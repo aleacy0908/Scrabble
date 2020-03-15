@@ -487,9 +487,6 @@ public class Board {
     boolean letterPresentOnBoard(char letter, int x, int y) {
         Square sqr = getSquare(x, y);
 
-        System.out.println("Checking X: " + x + " Y: " + y);
-        System.out.println("Letters present? " + sqr.isOccupied());
-
         if (sqr.isOccupied()) {
             return sqr.getTile() == letter;
         }

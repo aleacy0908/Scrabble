@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class Frame {
 
     //Access to the pool class and the tilePool
-    Pool pool = new Pool();
+    Pool pool;
 
     private final Pattern p = Pattern.compile("[a-zA-Z_]+");
 
@@ -13,9 +13,10 @@ public class Frame {
     ArrayList<Character> frame;
 
     //This creates a players frame at the start of the game
-    public Frame()
+    public Frame(Pool p)
     {
         this.frame = new ArrayList<Character>();
+        this.pool  = p;
 
         addToFrame();
     }

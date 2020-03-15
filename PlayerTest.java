@@ -77,8 +77,8 @@ class PlayerTest {
     public void TestgetFrame( ) {
 
 
-        Frame frameP1 = new Frame();
-        Frame frameP2 = new Frame();
+        Frame frameP1 = new Frame(new Pool());
+        Frame frameP2 = new Frame(new Pool());
 
         frameP1.frame = new ArrayList<Character>(Arrays.asList('E', 'C', 'X', 'S', 'K','J'));
         frameP2.frame = new ArrayList<Character>(Arrays.asList('S', 'W', 'Q', 'A', 'B','L'));

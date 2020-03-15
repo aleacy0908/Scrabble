@@ -23,22 +23,13 @@ public class Scrabble {
         playerNameA = readIn("Player A Name: ", SCAN);
         playerNameB = readIn("Player B Name: ", SCAN);
 
-        //Create Two Pools
-        Pool    poolA = new Pool(),
-                poolB = new Pool();
-
-        //Create Two Frames
-        Frame frameA = new Frame();
-        Frame frameB = new Frame();
-
         //Create Two Players
-        Player  playerA = new Player(playerNameA, 0, frameA),
-                playerB = new Player(playerNameB, 0, frameB);
-
-        Player[] players = new Player[] {playerA, playerB};
+        Player[] players = new Player[] {
+                new Player(playerNameA, 0, new Frame(new Pool())),
+                new Player(playerNameB, 0, new Frame(new Pool()))
+        };
 
         //Create The Board
-
         Board BOARD = new Board();
 
         //Play the game
@@ -49,7 +40,12 @@ public class Scrabble {
 
         //Todo: While(!GAME_EXIT)
 
-        int P = 0;
+        //Increments Each Turn
+        int TURN = -1;
+
+        //0 or 1 => Represents which player's
+        //move it is
+        int P;
 
         int[]  COORD = new int[2];
         String WORD;
@@ -58,6 +54,12 @@ public class Scrabble {
 
         while(!GAME_FINISHED)
         {
+            //Next Turn
+            TURN++;
+
+            //Switch Player (0 or 1)
+            P = TURN % 2;
+
             System.out.println("PLAYER " + P);
 
             //Show Player The Board
@@ -78,10 +80,9 @@ public class Scrabble {
             COORD = getCoord(playerInput);
             DIR   = getDirection(playerInput);
 
-            //Put Tiles On Board
+            //Place Tiles On Board
             BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD);
 
-            //Display on board
         }
     }
 

@@ -10,7 +10,7 @@ public class FrameTest {
 
     @Test
     void getFrame() {
-        Frame frame1 = new Frame();
+        Frame frame1 = new Frame(new Pool());
         frame1.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', '_', 'D', 'E', 'F'));
 
         System.out.println("---- getFrame test ----");
@@ -23,7 +23,7 @@ public class FrameTest {
 
     @Test
     void addToFrame() {
-        Frame frame1 = new Frame();
+        Frame frame1 = new Frame(new Pool());
         frame1.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C'));
 
         System.out.println("---- addToFrame test ----");
@@ -41,7 +41,7 @@ public class FrameTest {
     void removeFromFrame() {
         //an arraylist that contains letters for the class to remove
         ArrayList<Character> c = new ArrayList<Character>();
-        Frame frame1 = new Frame();
+        Frame frame1 = new Frame(new Pool());
 
         System.out.println("---- removeFromFrame test ----");
         System.out.println("Test Frame 1 before removing first 3 tiles: ");
@@ -59,7 +59,7 @@ public class FrameTest {
 
     @Test
     void checkIfEmpty() {
-        Frame frame2 = new Frame();
+        Frame frame2 = new Frame(new Pool());
 
         System.out.println("---- checkIfEmpty test ----");
         System.out.println("Current size of test frame 2 is: " + frame2.frame.size() + " So this test should return" +
@@ -77,7 +77,7 @@ public class FrameTest {
 
     @Test
     void checkLettersInFrame() {
-        Frame frame2 = new Frame();
+        Frame frame2 = new Frame(new Pool());
         frame2.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', '_', 'D', 'E', 'F'));
 
         System.out.println("---- checkLettersInFrame test ----");
@@ -101,7 +101,7 @@ public class FrameTest {
         System.out.println("---- getTileFromFrame test ----");
 
         ArrayList<Character> c = new ArrayList<Character>();
-        Frame frame1 = new Frame();
+        Frame frame1 = new Frame(new Pool());
         frame1.frame = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', '_', 'D', 'E', 'F'));
 
         System.out.println("The complete frame:");
