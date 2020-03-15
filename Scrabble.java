@@ -23,18 +23,19 @@ public class Scrabble {
         playerNameA = readIn("Player A Name: ", SCAN);
         playerNameB = readIn("Player B Name: ", SCAN);
 
-        //Create Two Players
-        Player  playerA = new Player(playerNameA, 0),
-                playerB = new Player(playerNameB, 0);
-
         //Create Two Pools
         Pool    poolA = new Pool(),
                 poolB = new Pool();
 
         //Create Two Frames
-        Frame[] frames = {
-                new Frame(), new Frame()
-        };
+        Frame frameA = new Frame();
+        Frame frameB = new Frame();
+
+        //Create Two Players
+        Player  playerA = new Player(playerNameA, 0, frameA),
+                playerB = new Player(playerNameB, 0, frameB);
+
+        Player[] players = new Player[] {playerA, playerB};
 
         //Create The Board
 
@@ -65,28 +66,20 @@ public class Scrabble {
 
             //Display the frame to player
             System.out.println("FRAME");
-            frames[P].displayFrame();
+            players[P].getFrameP().displayFrame();
             System.out.print("\n\n\n");
 
             //Player chooses words
-            playerInput = readIn("Enter Loc Direction Word: ", SCAN);
+            System.out.println("Next Move!");
+            playerInput = readIn("Format: <Coord> <Dir> <Word>: ", SCAN);
 
             //Parse Input
             WORD  = getWord(playerInput);
             COORD = getCoord(playerInput);
             DIR   = getDirection(playerInput);
 
-            BOARD.tileSelection(playerA, COORD[0], COORD[1], DIR, WORD);
-
-            //Check if word uses letters in the frame
-            boolean lettersInFrame = frames[P].checkLettersInFrame(WORD);
-
-            //Check if word is somewhat complete on board
-
-            //Check there's enough space on the board
-            boolean enoughSpace = WORD.length() + COORD[0] <= BOARD.rows();
-
-            //If so, place on the board
+            //Put Tiles On Board
+            BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD);
 
             //Display on board
         }
@@ -111,20 +104,40 @@ public class Scrabble {
 
     public static String getWord(String s)
     {
-        return s.substring(6);
+        int[] spaces = getSpaces(s);
+
+        return s.substring(spaces[2]+1);
     }
 
     public static char getDirection(String s)
     {
-        return s.charAt(4);
+        int[] spaces = getSpaces(s);
+
+        return s.charAt(spaces[1] + 1);
     }
 
     public static int[] getCoord(String s)
     {
-        char x = s.charAt(0);
-        char y = s.charAt(2);
+        int[] spaces = getSpaces(s);
+
+        String x = s.substring(0, spaces[0]);
+        String y = s.substring(spaces[0] + 1, spaces[1]);
 
         return new int[] {
-                Character.getNumericValue(x), Character.getNumericValue(y) };
+                Integer.parseInt(x), Integer.parseInt(y) };
+    }
+
+    public static int[] getSpaces(String s)
+    {
+        //Index Of Space Characters
+        int spc  = s.indexOf(' ');
+        int spc2 = s.indexOf(' ', spc + 1);
+        int spc3 = s.indexOf(' ', spc2+1);
+
+        //Error Handling
+        if(spc == -1 || spc2 == -1 || spc3 == -1)
+            throw new IllegalArgumentException("Invalid Input");
+
+        return new int[]{spc, spc2, spc3};
     }
 }

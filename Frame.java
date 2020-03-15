@@ -93,15 +93,12 @@ public class Frame {
     */
     public boolean checkLettersInFrame()
     {
-        System.out.println("Checking Letters");
 
         boolean containsLetter = true;
 
         for(char c : this.frame){
             Matcher m = p.matcher(Character.toString(c));
             boolean letter = m.matches();
-
-            System.out.println("MATCHER: " + letter);
 
             if(!letter){
                 containsLetter = false;
@@ -118,19 +115,15 @@ public class Frame {
     public boolean checkLettersInFrame(String s)
     {
         boolean containsLetter = true;
-        System.out.println("Checking Letter");
 
         for(int i = 0; i < s.length(); i++)
         {
-            System.out.println("CHECKS LETTERS: " + i);
             if(!this.frame.contains(s.charAt(i))){
-                System.out.println("FALSE");
                 containsLetter = false;
                 break;
             }
         }
 
-        System.out.println("COntains: " + containsLetter);
         return containsLetter;
     }
 
