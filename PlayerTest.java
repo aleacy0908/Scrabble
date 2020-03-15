@@ -15,7 +15,7 @@ class PlayerTest {
     @Test
     public void TestgetName ( ) {
 
-        Player j = new Player("bill", 56);
+        Player j = new Player("bill");
 
 
         assert (j.nameP().equals("bill"));
@@ -30,7 +30,7 @@ class PlayerTest {
         String name = "john";
         String name2 = "bill";
 
-        Player j = new Player("john",67);
+        Player j = new Player("john");
 
         j.setPlayer(name);
 
@@ -46,7 +46,7 @@ class PlayerTest {
     public void Testreset( ) {
 
         //String blank = "";
-        Player j = new Player("john", 67);
+        Player j = new Player("john");
 
         assert(j.nameP().equals("john"));
 
@@ -63,11 +63,11 @@ class PlayerTest {
     @Test
     public void TestgetScore( ) {
 
-        Player j = new Player("john",68);
+        Player j = new Player("john");
 
-        j.getP_score();
+        j.setScore(68);
 
-        assertEquals(68, j.getP_score());
+        assertEquals(68, j.getScore());
 
         System.out.println("getScore Test Succesful");
 
@@ -95,17 +95,15 @@ class PlayerTest {
     public void TestincreaseScore() {
 
 
-        Player j = new Player("john",57);
+        Player j = new Player("john");
 
+        j.setScore(57);
 
-        j.getP_score();
-
-        assertEquals(57, j.getP_score());
+        assertEquals(57, j.getScore());
 
         j.increaseScore(10);
 
-
-        assertEquals(67, j.getP_score());
+        assertEquals(67, j.getScore());
 
         System.out.println("getScore Test Successful");
 

@@ -2,84 +2,51 @@ import java.io.*;
 import java.util.*;
 
 
-public class Player {
-
-    int score;
+public class Player extends Score {
 
     private String Player;
-
-    private int P_score;
-
-    private Frame frame;
+    private Frame  frame;
 
     //Constructor With Frame
-    Player (String P,int Ps, Frame f) {
-        this.Player = P;
-        this.P_score = Ps;
-        this.frame = f;
+    Player (String P, Frame f) {
+        this.Player  = P;
+        this.frame   = f;
     }
 
     //Constructor Without Frame
-    Player (String P,int Ps) {
-        this.Player = P;
-        this.P_score = Ps;
+    Player (String P) {
+        this.Player  = P;
     }
 
-
-    // allows player data to be reset
-
+    //Reset Player
     public void reset()
     {
-        // sets player score back to zero
-        P_score = 0;
+        //Re-Initialise Score
+        this.setScore(0);
 
-
-        // erases player name
-        Player = "";
-
-
+        //New Frame
+        this.setFrame(new Frame(new Pool()));
     }
 
-
-
-    // allows name of a player to be set
-
+    //Modify Name
     public void setPlayer (String player)
-
     {
        this.Player = player;
     }
 
-
-    // allows a player score to be increased
-
-    public void increaseScore(int score)
-    {
-        P_score += score;
-    }
-
-
-    // allows access to their score
-    public int getP_score ( ) {
-
-        // return score of player one
-        return P_score;
-    }
-
-
-    //Allows access to a players frame
+    //Access Frame
     public Frame getFrameP ( ) {
         // return frame of player one
         return frame;
     }
 
+    //Modify Frame
     public void setFrame(Frame f)
     {
         this.frame = f;
     }
 
-    // allows display of a players name
-
+    //Display Player Name
     public String nameP()
     {
         // return name of player one
