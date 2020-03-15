@@ -8,19 +8,21 @@ public class Player {
 
     private String Player;
 
-
     private int P_score;
 
     private Frame frame;
 
-
-    Player (String P,int Ps) {
-
+    //Constructor With Frame
+    Player (String P,int Ps, Frame f) {
         this.Player = P;
         this.P_score = Ps;
-        this.frame = new Frame();
+        this.frame = f;
+    }
 
-
+    //Constructor Without Frame
+    Player (String P,int Ps) {
+        this.Player = P;
+        this.P_score = Ps;
     }
 
 
@@ -57,9 +59,7 @@ public class Player {
     }
 
 
-
     // allows access to their score
-
     public int getP_score ( ) {
 
         // return score of player one
@@ -67,22 +67,20 @@ public class Player {
     }
 
 
-    // allows access to a players frame
-
+    //Allows access to a players frame
     public Frame getFrameP ( ) {
-
         // return frame of player one
         return frame;
     }
 
-
-
-
+    public void setFrame(Frame f)
+    {
+        this.frame = f;
+    }
 
     // allows display of a players name
 
     public String nameP()
-
     {
         // return name of player one
         return Player;

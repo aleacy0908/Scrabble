@@ -15,7 +15,6 @@ class PlayerTest {
     @Test
     public void TestgetName ( ) {
 
-
         Player j = new Player("bill", 56);
 
 
