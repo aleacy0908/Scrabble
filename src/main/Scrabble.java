@@ -1,10 +1,7 @@
 package src.main;
 
 import src.mechanics.Board;
-import src.mechanics.Frame;
-import src.mechanics.Pool;
 import src.user.Player;
-import src.util.UI;
 
 import java.util.Scanner;
 

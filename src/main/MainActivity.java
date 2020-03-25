@@ -26,9 +26,8 @@ import src.mechanics.Square;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static src.util.Controller.closeGame;
 
-public class MainActivity extends Application{
+public class MainActivity{
 
     static Scrabble GAME;
 
@@ -37,8 +36,6 @@ public class MainActivity extends Application{
         GAME = new Scrabble();
 
         GAME.setBoard(new Board());
-
-        Application.launch(args);
 
         //--SETUP--
         Application.launch(UI.class);
@@ -134,12 +131,6 @@ public class MainActivity extends Application{
             GAME.incrementTurn();
         }
 
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setScene(new Scene(new TilePane(createBoard())));
-        primaryStage.show();
     }
 
     public static class Tile extends StackPane {
