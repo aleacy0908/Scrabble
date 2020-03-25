@@ -1,6 +1,13 @@
 package src.main;
 
+import javafx.*;
 import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import src.mechanics.Board;
 import src.mechanics.Frame;
 import src.mechanics.Pool;
@@ -13,135 +20,53 @@ import java.util.Scanner;
 
 public class Scrabble {
 
-    // Allow two humans to play scrabble
-    // Game should include scoring
-    // Challenges & Dictionary Checks dealt with manually
-    // i.e manually subtract the score of the successfully
-    // challenged word at the end
+    private Board    BOARD;
+    private Player[] players;
+    private int      wordsOnBoard = 0;
+    private int      numPlayers   = 0;
+    private int      playerTurn   = 0;
 
-    public static void main(String[] args)
+    public          Scrabble() {}
+
+    //How Many Words Are On The Board
+    public int      getWordsOnBoard() { return this.wordsOnBoard; }
+
+    //Return Player Who's Turn It Is
+    public Player   getCurrentPlayer() { return this.getPlayer(playerTurn); }
+
+    //Get/Set For Board
+    public void     setBoard(Board b) { this.BOARD = b; }
+    public Board    getBoard()        { return this.BOARD; }
+
+    //Retrieve ALL Players
+    public Player[] getPlayers() { return this.players; }
+
+    //Set ALL Players
+    public void setPlayers(Player[] p)
     {
-        //--SETUP--
-        Application.launch(UI.class);
+        this.players = p;
+        this.numPlayers = p.length;
+    }
 
-        //Read User Input
-        Scanner SCAN = new Scanner(System.in);
+    //Move To Next Turn
+    public void incrementTurn()
+    {
+        //Increment turn
+        playerTurn++;
 
-        //Player Names
-        String playerNameA, playerNameB;
+        //Make It Turn 0 or 1 for 2 players, etc
+        playerTurn %= numPlayers;
+    }
 
-        playerNameA = readIn("Player A Name: ", SCAN);
-        playerNameB = readIn("Player B Name: ", SCAN);
+    //Get A Single Player By ID
+    public Player getPlayer(int indx)
+    {
 
-        //Create Two Players
-        Player[] players = new Player[] {
-                new Player(playerNameA, new Frame(new Pool())),
-                new Player(playerNameB, new Frame(new Pool()))
-        };
+        //Error Handle: Invalid Index
+        if(numPlayers - (indx+1) < 0)
+            throw new IllegalArgumentException("No Player At Index");
 
-        //Create The Board
-        Board BOARD = new Board();
-
-
-
-
-        //Play the game
-        String playerInput;
-
-        boolean GAME_FINISHED = false;
-        boolean EXIT_GAME     = false;
-
-        //Todo: While(!GAME_EXIT)
-
-        //Increments Each Turn
-        int TURN = 0;
-
-        //0 or 1 => Represents which player's
-        //move it is
-        int P = 0;
-
-        /*
-        These variables hold the separate
-        values for the coordinates, word
-        and direction the user entered */
-
-        int[]  COORD = new int[2];
-        String WORD;
-        char   DIR;
-
-        //Current # Of Words
-        int wordsOnBoard = 0;
-
-        /*
-        Valid Move Made
-
-        True: If game can move onto
-        the next move
-
-        False: If same user must enter
-        a word again
-
-        Initialised As True
-        */
-
-        boolean validMoveMade = true;
-
-        String pName;
-
-
-        while(!GAME_FINISHED) {
-            //Which Player's Turn Is It?
-            pName = (P == 0) ? players[0].nameP() : players[1].nameP();
-
-            //Show Player The Board
-            if (validMoveMade) {
-                //Print This Player's Name
-                System.out.println("PLAYER " + pName);
-
-                BOARD.DisplayBoard();
-                System.out.print("\n\n\n");
-
-                //Display the frame to player
-                System.out.println("FRAME");
-                players[P].getFrameP().displayFrame();
-                System.out.print("\n\n\n");
-            }
-
-            //Player chooses words
-            System.out.println(pName + ", Please Enter A Word.");
-            playerInput = readIn("Use Format: <Coord> <Dir> <Word>: ", SCAN);
-
-            //Parse Input
-            WORD  = getWord(playerInput);
-            COORD = getCoord(playerInput);
-            DIR   = getDirection(playerInput);
-
-            //True If User Places Valid Word
-            validMoveMade = BOARD.tileSelection(players[P], COORD[0], COORD[1], DIR, WORD, wordsOnBoard);
-
-            //RETRY MOVE
-            if (!validMoveMade)
-                continue;
-
-            //Valid Move, Thus Find Out Word Score
-            int wordScore = players[P].calculateScore(WORD, COORD[0], COORD[1], DIR);
-
-            //Increase Player Score
-            players[P].increaseScore(wordScore);
-
-            //Print Out Score
-            System.out.println(WORD + " Is Worth " + wordScore + " Points!");
-            System.out.println(pName + "'s Score Is " + players[P].getScore() + "\n\n");
-
-            System.out.println("Next Move! Hit Enter When Ready.");
-            readIn("", SCAN);
-
-            //Next Turn
-            TURN++;
-
-            //Switch Player (0 or 1)
-            P = TURN % 2;
-        }
+        return this.getPlayers()[indx];
 
     }
 
