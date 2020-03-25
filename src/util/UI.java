@@ -28,40 +28,23 @@ public class UI extends Application {
 
     int i, j;
 
-    public class Tile extends StackPane {
-        public Tile (String a) {
-
-            Rectangle border = new Rectangle(50, 50);
-            border.setFill(Color.GREEN);
-            border.setStroke(Color.WHITE);
-
-            GridPane.setRowIndex(border, i);
-            GridPane.setColumnIndex(border, j);
-
-
-            Text text = new Text(a);
-            // text.setFill(Color.BLACK);
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(border, text);
-
-        }
-    }
-
-
     public Parent createBoard (Board b) {
         this.board = b;
 
-        Pane gameBoard = new Pane();
+        GridPane gameBoard = new GridPane();
         gameBoard.setPrefSize(700, 700);
 
+        String Tile = " ";
         for (i = 1; i < 16; i++) {
             for (j = 1; j < 16; j++) {
+                Tile bt = new Tile(String.valueOf(Tile));
+
                 Square sqr = board.getSquare(i, j);
 
                 if (sqr.isOccupied()) {
 
                     char tile = sqr.getTile();
-                    Tile bt = new Tile(String.valueOf(tile));
+                     bt = new Tile(String.valueOf(tile));
 
                 } else {
                     String output;
@@ -69,7 +52,7 @@ public class UI extends Application {
                     switch (sqr.getMultiplier()) {
                         case DL:
                             output = "DL";
-                            Tile bt = new Tile(String.valueOf(output));
+                            bt = new Tile(String.valueOf(output));
                             break;
                         case DW:
                             output = "DW";
@@ -95,6 +78,24 @@ public class UI extends Application {
         return gameBoard;
     }
 
+    public class Tile extends StackPane {
+        public Tile (String a) {
+
+            Rectangle border = new Rectangle(50, 50);
+            border.setFill(Color.GREEN);
+            border.setStroke(Color.WHITE);
+
+            GridPane.setRowIndex(border, i);
+            GridPane.setColumnIndex(border, j);
+
+
+            Text text = new Text(a);
+            setAlignment(Pos.CENTER);
+            getChildren().addAll(border, text);
+
+        }
+    }
+
 
     public Board getBoard ( ) {
         return this.board;
@@ -113,11 +114,10 @@ public class UI extends Application {
 
 
     }
-}
 
-/*
+
+
     public static void main (String[] args) {
         launch(args);
     }
 }
-*/
