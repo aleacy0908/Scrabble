@@ -1,20 +1,10 @@
 package src.main;
 
-import javafx.*;
-import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import src.mechanics.Board;
 import src.mechanics.Frame;
 import src.mechanics.Pool;
 import src.user.Player;
 import src.util.UI;
-
-import javafx.*;
 
 import java.util.Scanner;
 
