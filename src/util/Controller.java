@@ -129,8 +129,6 @@ public class Controller {
         String[] usage = option.split(" ");
         int x;
         int y;
-        String word;
-        char dir;
 
         //Quits the game
         if(option.equals("QUIT")){
@@ -150,23 +148,28 @@ public class Controller {
         }
 
         /*
-        Splits the grid ref, direction and word from each other so they can be easily passed back
-        to the main scrabble class.
+        When a player enters the grid ref of where they want to place their word,
+        the format of the grid ref needs to be changed from 'A1' to '1 1' as this
+        is the format in which the game's code understands the grid references
          */
         if(usage.length == 3 && usage[0].length() > 1){
+
+            //The x value is converted from a char to a int
             x = (usage[0].charAt(0) - 64);
 
-            //Here the grid ref will be converted from the format 'A1' to '1 1' so it works with our code
+            /*
+            Here the int value of the y grid ref is extracted.
+            The point of this if statement is to check if the player
+            entered a y value equal to or larger than 10. If so then
+            we need to split the y value from the x value and then convert
+            that smaller string into a int.
+             */
             if(usage[0].length() == 2){
                 y = Character.getNumericValue(usage[0].charAt(1));
             }else{
                 String yTemp = Character.toString(usage[0].charAt(1)) + usage[0].charAt(2);
                 y = Integer.parseInt(yTemp);
             }
-
-            dir = usage[1].charAt(0);
-            word = usage[2];
-
         }
     }
 }
