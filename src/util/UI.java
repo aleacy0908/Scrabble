@@ -67,14 +67,14 @@ public class UI extends Application {
     @Override
     public void start (Stage primaryStage) {
 
-        primaryStage.setScene(new Scene(createBoard(new Board())));
+        primaryStage.setScene(new Scene(createBoard(this.board)));
         primaryStage.show();
 
 
     }
 
 
-    public static void main (String[] args) {
+   /* public static void main (String[] args) {
         launch(args);
-    }
+    }*/
 }

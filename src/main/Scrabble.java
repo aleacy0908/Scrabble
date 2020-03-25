@@ -1,9 +1,13 @@
 package src.main;
 
+import javafx.application.Application;
 import src.mechanics.Board;
 import src.mechanics.Frame;
 import src.mechanics.Pool;
 import src.user.Player;
+import src.util.UI;
+
+import javafx.*;
 
 import java.util.Scanner;
 
@@ -18,6 +22,7 @@ public class Scrabble {
     public static void main(String[] args)
     {
         //--SETUP--
+        Application.launch(UI.class);
 
         //Read User Input
         Scanner SCAN = new Scanner(System.in);
@@ -36,6 +41,9 @@ public class Scrabble {
 
         //Create The Board
         Board BOARD = new Board();
+
+
+
 
         //Play the game
         String playerInput;
@@ -78,8 +86,6 @@ public class Scrabble {
 
         boolean validMoveMade = true;
 
-        //Current Name Of Who's
-        //Turn It Is
         String pName;
 
 
