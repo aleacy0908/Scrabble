@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 public class Controller {
 
     private static Stage window;
-    private TextField input;
-    private TextArea output;
+    public TextField input;
+    public TextArea output;
 
     /*
     This is a general method made so
