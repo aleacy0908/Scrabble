@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1140.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.util.Controller">
+    <children>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="472.0" spacing="10.0">
+            <children>
+                <TextArea fx:id="output" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="655.0" prefWidth="450.0">
+                    <VBox.margin>
+                        <Insets left="10.0" />
+                    </VBox.margin>
+                </TextArea>
+                <HBox prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <TextField fx:id="input" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="396.0" promptText="Enter text here">
+                            <HBox.margin>
+                                <Insets left="10.0" />
+                            </HBox.margin>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#textEntered" text="Submit" />
+                    </children>
+                    <VBox.margin>
+                        <Insets right="10.0" />
+                    </VBox.margin>
+                </HBox>
+            </children>
+            <padding>
+                <Insets top="10.0" />
+            </padding>
+        </VBox>
+    </children>
+</HBox>
