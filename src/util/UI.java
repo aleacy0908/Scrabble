@@ -1,123 +1,56 @@
 package src.util;
 
-
 import javafx.application.Application;
-import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import src.main.MainActivity;
+import src.main.Scrabble;
 import src.mechanics.Board;
 import src.mechanics.Square;
 import javafx.scene.Node;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import static src.util.Controller.closeGame;
 
 
 public class UI extends Application {
 
-    public final short B_ROWS = 15;
-    public final short B_COLS = 15;
-    Board board;
+    Stage gameWindow;
 
-    int i, j;
-
-    public Parent createBoard (Board b) {
-        this.board = b;
-
-        GridPane gameBoard = new GridPane();
-        gameBoard.setPrefSize(700, 700);
-
-        String Tile = " ";
-        for (i = 1; i < 16; i++) {
-            for (j = 1; j < 16; j++) {
-                Tile bt = new Tile(String.valueOf(Tile));
-
-                Square sqr = board.getSquare(i, j);
-
-                if (sqr.isOccupied()) {
-
-                    char tile = sqr.getTile();
-                     bt = new Tile(String.valueOf(tile));
-
-                } else {
-                    String output;
-
-                    switch (sqr.getMultiplier()) {
-                        case DL:
-                            output = "DL";
-                            bt = new Tile(String.valueOf(output));
-                            break;
-                        case DW:
-                            output = "DW";
-                            bt = new Tile(String.valueOf(output));
-                            break;
-                        case TL:
-                            output = "TL";
-                            bt = new Tile(String.valueOf(output));
-                            break;
-                        case TW:
-                            output = "TW";
-                            bt = new Tile(String.valueOf(output));
-                            break;
-                        default:
-                            output = "  ";
-                            bt = new Tile(String.valueOf(output));
-
-                            gameBoard.getChildren().add(bt);
-                    }
-                }
-            }
-        }
-        return gameBoard;
-    }
-
-    public class Tile extends StackPane {
-        public Tile (String a) {
-
-            Rectangle border = new Rectangle(50, 50);
-            border.setFill(Color.GREEN);
-            border.setStroke(Color.WHITE);
-
-            GridPane.setRowIndex(border, i);
-            GridPane.setColumnIndex(border, j);
-
-
-            Text text = new Text(a);
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(border, text);
-
-        }
-    }
-
-
-    public Board getBoard ( ) {
-        return this.board;
-    }
-
-    public void setBoard (Board b) {
-        this.board = b;
-    }
-
-
-    @Override
-    public void start (Stage primaryStage) {
-
-        primaryStage.setScene(new Scene(createBoard(new Board())));
-        primaryStage.show();
-
-
-    }
-
-
-
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         launch(args);
     }
+
+    @Override
+    public void start(Stage mainStage) throws Exception {
+
+        HBox root = FXMLLoader.load(getClass().getResource("UI.fxml"));
+        gameWindow = mainStage;
+        gameWindow.setTitle("Scrabble");
+
+        gameWindow.setOnCloseRequest(e -> {
+            e.consume();
+            closeGame();
+        });
+
+        root.getChildren().add(MainActivity.createBoard());
+
+        gameWindow.setResizable(false);
+        gameWindow.setScene(new Scene(root));
+        gameWindow.show();
+    }
+
 }
+
