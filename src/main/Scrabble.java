@@ -2,14 +2,13 @@ package src.main;
 
 import src.mechanics.Board;
 import src.user.Player;
-
 import java.util.Scanner;
 
 public class Scrabble {
 
     private Board    BOARD;
     private Player[] players;
-    private int      wordsOnBoard = 0;
+    public static int wordsOnBoard = 0;
     private int      numPlayers   = 0;
     private int      playerTurn   = 0;
 

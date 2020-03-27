@@ -1,18 +1,33 @@
 package src.util;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import src.main.MainActivity;
+import src.main.Scrabble;
+import src.mechanics.Board;
+import src.mechanics.Frame;
+import src.mechanics.Pool;
+import src.mechanics.Square;
+import src.user.Player;
 
-import static src.util.Controller.closeGame;
+import java.util.ArrayList;
 
 
 public class UI extends Application {
 
-    Stage gameWindow;
+    public static Scrabble GAME = new Scrabble();
 
     public static void main(String[] args) {
         launch(args);
@@ -21,21 +36,445 @@ public class UI extends Application {
     @Override
     public void start(Stage mainStage) throws Exception {
 
-        HBox root = FXMLLoader.load(getClass().getResource("UI.fxml"));
-        gameWindow = mainStage;
-        gameWindow.setTitle("Scrabble");
+        //create the 'Enter Player Names' window
+        VBox playerNameWindow = new VBox();
+        playerNameWindow.setSpacing(10);
+        playerNameWindow.setPadding(new Insets(10,10,10,10));
 
-        gameWindow.setOnCloseRequest(e -> {
+        //create the button for submitting the player names
+        Button confirm = new Button("Confirm");
+
+        Label instruction = new Label("Enter each players name below");
+        Label player1Name = new Label("Player 1 Name: ");
+        Label player2Name = new Label("Player 2 Name: ");
+        TextField name1 = new TextField();
+        TextField name2 = new TextField();
+
+        //Add all the created elements into the playerNameWindow scene
+        playerNameWindow.getChildren().addAll(instruction,player1Name,name1,player2Name,name2,confirm);
+
+        //will launch the game when the players submit their names
+        confirm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                //if one or both of the player names isn't given, an error will appear
+                if(name1.getText().trim().isEmpty() || name2.getText().trim().isEmpty()){
+                    alert("Error","Both players must be given a name!");
+                }else{
+                    GAME.setPlayers(new Player[]{
+                            new Player(name1.getText(), new Frame(new Pool())),
+                            new Player(name2.getText(), new Frame(new Pool()))
+                    });
+                    runGame(mainStage);
+                }
+            }
+        });
+
+        //Set the title and alignment of the window then launch
+        mainStage.setTitle("Scrabble by The Pintsmen");
+        playerNameWindow.setAlignment(Pos.CENTER);
+        mainStage.setScene(new Scene(playerNameWindow, 350,300));
+        mainStage.show();
+
+    }
+
+    private static Stage window;
+    public TextField input = new TextField();
+    public static TextArea output = new TextArea();
+    public Button submit = new Button();
+
+    Player currPlayer;
+
+    public void runGame(Stage mainStage){
+
+        mainStage.setTitle("Scrabble by The Pintsmen");
+
+        //Whenever a close request is made, consume the request and load closeGame method
+        mainStage.setOnCloseRequest(e -> {
             e.consume();
             closeGame();
         });
 
-        root.getChildren().add(MainActivity.createBoard());
+        //Create the layout of the main game window
+        HBox mainWindow = new HBox(10);
 
-        gameWindow.setResizable(true);
-        gameWindow.setScene(new Scene(root));
-        gameWindow.show();
+        //Console contains all the elements which the user can interact with
+        VBox console = new VBox(10);
+
+        //Contains all the elements which accept user input
+        HBox inputSpace = new HBox();
+
+        //Contains the buttons for user to interact with
+        ButtonBar commandButtons = new ButtonBar();
+
+        //Placed into commandButtons for easier access to console commands
+        Button help = new Button("Help");
+        Button pass = new Button("Pass");
+        Button quit = new Button("Quit");
+
+        //Set the size of the entire game window
+        mainWindow.setPrefSize(700.0,400.0);
+        mainWindow.setPadding(new Insets(10,10,10,10));
+
+        //Set the size of the console section of the game window
+        console.setPrefSize(321.0,500.0);
+
+        //Disable user input for the TextArea and set its size in console
+        output.setEditable(false);
+        output.setPrefSize(448,520);
+
+        //Set the size of inputSpace and add the input elements to it
+        inputSpace.setPrefSize(200,100);
+        input.setPrefSize(210,25);
+        input.setPromptText("Enter text here");
+        submit.setText("Submit");
+        inputSpace.getChildren().addAll(input,submit);
+
+        //Set the size for the button bar and add all buttons to it
+        commandButtons.setPrefSize(235,25);
+        commandButtons.getButtons().addAll(pass,help,quit);
+        console.setPadding(new Insets(0,0,0,10));
+
+        //Add all the panes to the main game window
+        console.getChildren().addAll(output,inputSpace,commandButtons);
+
+        //Create and add the game board to the UI
+        GAME.setBoard(new Board());
+        mainWindow.getChildren().addAll(console,createBoard());
+
+        //Update the current player and print out their frame
+        currPlayer = GAME.getCurrentPlayer();
+        output.setText(output.getText() + "\n" + currPlayer.nameP() + "'s Frame: " + currPlayer.getFrameP().getFrame());
+
+        //Set the commands each button will execute when pressed
+        quit.setOnAction(e -> closeGame());
+        help.setOnAction(e -> helpMessage());
+        pass.setOnAction(e -> passTurn());
+
+        //When the user submits input from the textfield, parse whether it is a command or player input
+        submit.setOnAction(e -> {
+            String option = input.getText();
+            //Creating variables to parse the input
+            option = option.toUpperCase();
+
+            switch (option){
+
+                case ("QUIT"):
+                    closeGame();
+                    break;
+
+                case ("PASS"):
+                    passTurn();
+                    break;
+
+                case ("HELP"):
+                    helpMessage();
+                    break;
+
+                default:
+                    //Pass the players input to the method which allows the game to play
+                    takeTurn(option);
+                    mainWindow.getChildren().remove(createBoard());
+                    mainWindow.getChildren().add(createBoard());
+
+            }
+        });
+
+        //Disable allowing a user to manually change the game windows size
+        mainStage.setResizable(false);
+        mainStage.setScene(new Scene(mainWindow));
+        mainStage.show();
+
+    }
+
+
+    /*
+    This method will execute each time a player submits their input
+    into the UI. It will allow players to interact with and play the game.
+     */
+    public void takeTurn(String playerInput){
+        boolean PLAYER_FINISHED = false;
+        boolean EXIT_GAME = false;
+
+        //Todo: While(!GAME_EXIT)
+
+        /*
+        These variables hold the separate
+        values for the coordinates, word
+        and direction the user entered */
+
+        int[] COORD = new int[2];
+        String WORD;
+        char DIR;
+
+        //Did The User Make A Valid Move?
+        //Can We Move Onto The Next Move?
+        //validMoveMade answers both these q's
+        boolean validMoveMade;
+
+        String pName;
+
+        while (!PLAYER_FINISHED) {
+            //Which Player's Turn Is It?
+            pName = currPlayer.nameP();
+
+            playerInput = input.getText();
+
+            //Parse Input
+            WORD = GAME.getWord(playerInput);
+            COORD = GAME.getCoord(playerInput);
+            DIR = GAME.getDirection(playerInput);
+
+            //True If User Places Valid Word
+            validMoveMade = GAME.getBoard().tileSelection(currPlayer, COORD[0], COORD[1],
+                    DIR, WORD, Scrabble.wordsOnBoard);
+
+            //RETRY MOVE
+            if (!validMoveMade) {
+                PLAYER_FINISHED = true;
+            }
+
+            //Valid Move, Thus Find Out Word Score
+            int wordScore = currPlayer.calculateScore(WORD, COORD[0], COORD[1], DIR);
+
+            //Increase Player Score
+            currPlayer.increaseScore(wordScore);
+
+            //Print Out Score
+            output.setText(output.getText() + "\n" + WORD + " is Worth " + wordScore + " Points!");
+            output.setText(output.getText() + "\n" + pName + "'s Score Is " + currPlayer.getScore() + "\n\n");
+
+            //Increment current turn
+            GAME.incrementTurn();
+
+            //Update the current player
+            currPlayer = GAME.getCurrentPlayer();
+
+            //Prompt next player to choose their word
+            output.setText(output.getText() + "\n" + "Player 2 , Please enter your word");
+
+            //Show Player Their Frame
+            if (validMoveMade) {
+                //Display the frame to player
+                output.setText(output.getText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
+            }
+
+
+            PLAYER_FINISHED = true;
+        }
+
+
+    }
+
+
+    //Simply used to print a players frame to the UI
+    public ArrayList<Character> printFrame(){
+        return currPlayer.getFrameP().getFrame();
+    }
+
+    /*
+    This will allow a player to skip their turn
+     */
+    public void passTurn(){
+        output.setText(output.getText() + "\n" + currPlayer.nameP() + " passed their turn!");
+
+        //Increment the current turn of the game
+        GAME.incrementTurn();
+
+        //Update the current player
+        currPlayer = GAME.getCurrentPlayer();
+        output.setText(output.getText() + "\n" + currPlayer.nameP() + "'s Frame: " +
+                currPlayer.getFrameP().getFrame());
+    }
+
+    /*
+    This method will display the help message to the player
+     */
+    public void helpMessage(){
+        String message = "How to use:\n" +
+                "<GRID REF> <DIRECTION A(across)/D(downwards)> <WORD>\n(Example: A1 A HELLO)\n" +
+                "QUIT: Close the game\n" +
+                "HELP: Displays this message\n";
+
+        alert("Help", message);
+    }
+
+    /*
+    Whenever a player tries to close the game, this method
+    is called upon. It simply prompts them with a message
+    to ask if they are certain they'd like to close the
+    program
+     */
+    public static void closeGame(){
+        //A confirm box is created asking the players whether they want to close the program
+        boolean answer = confirm("Exit Game","Are you sure you want to end the game?");
+
+        //If they answered yes, then the program will close
+        if(answer){
+            Platform.exit();
+            System.exit(0);
+        }
+    }
+
+    public static class Tile extends StackPane {
+        public Tile(String a, int i, int j) {
+
+            Rectangle border = new Rectangle(25, 25);
+            border.setFill(Color.GREEN);
+            border.setStroke(Color.WHITE);
+
+            GridPane.setRowIndex(border, i);
+            GridPane.setColumnIndex(border, j);
+
+
+            Text text = new Text(a);
+            setAlignment(Pos.CENTER);
+            getChildren().addAll(border, text);
+
+        }
+    }
+
+    public Parent createBoard() {
+        TilePane gameBoard = new TilePane();
+
+        gameBoard.setPrefSize(700, 700);
+        gameBoard.setPrefRows(GAME.getBoard().rows());
+        gameBoard.setPrefColumns(GAME.getBoard().cols());
+
+        ArrayList<Tile> tiles = new ArrayList<Tile>();
+
+        GAME.setBoard(new Board());
+
+        Tile bt;
+
+        for (int i = 1; i <= GAME.getBoard().rows(); i++) {
+            for (int j = 1; j <= GAME.getBoard().cols(); j++) {
+
+                Square sqr = GAME.getBoard().getSquare(i, j);
+
+                String output;
+                String Tile = " ";
+
+                if (sqr.isOccupied()) {
+
+                    char tile = sqr.getTile();
+                    bt = new Tile(String.valueOf(tile), i, j);
+                } else {
+                    switch (sqr.getMultiplier()) {
+                        case DL:
+                            output = "DL";
+                            break;
+                        case DW:
+                            output = "DW";
+                            break;
+                        case TL:
+                            output = "TL";
+                            break;
+                        case TW:
+                            output = "TW";
+                            break;
+                        default:
+                            output = "  ";
+                    }
+
+                    bt = new Tile(String.valueOf(output), i, j);
+
+                }
+
+                tiles.add(bt);
+            }
+        }
+        gameBoard.getChildren().addAll(tiles);
+
+        return gameBoard;
+    }
+
+
+    /*
+    This is a general method made so
+    a prompt message can appear to inform the
+    players of something they need to know
+     */
+    public static void alert(String title, String message){
+
+        //The prompts stage is created and its limits are set
+        window = new Stage();
+        window.setTitle(title);
+        window.setMaxWidth(350);
+        window.setMinWidth(250);
+
+        //Blocks the player from interacting with other windows until this alert is closed
+        window.initModality(Modality.APPLICATION_MODAL);
+
+        //A label element is created with the custom message passed into the method
+        Label label = new Label();
+        label.setText(message);
+
+        //A button for the player to confirm that they have read the alert
+        Button ok = new Button("Ok");
+
+        //Closes the alert when the player presses the button
+        ok.setOnAction(e -> window.close());
+
+        //A scene with VBox layout is created
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, ok);
+        layout.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(layout);
+
+        window.setScene(scene);
+        window.showAndWait();
+    }
+
+    static boolean answer;
+
+    /*
+    This is a general method made so
+    a prompt message to the players can be easily
+    made, asking them to confirm something.
+     */
+    public static boolean confirm(String title, String message){
+
+        //Creating the stage
+        window = new Stage();
+        window.setTitle(title);
+        window.setMaxWidth(350);
+        window.setMinWidth(250);
+
+        //This will block the players from interacting with other windows
+        window.initModality(Modality.APPLICATION_MODAL);
+
+        //Placing the passed in message into a Label element to be added to the scene
+        Label label = new Label();
+        label.setText(message);
+
+        //Creating the buttons for the players to interact with
+        Button yes = new Button("Yes");
+        Button no = new Button("No");
+
+        //If they answer yes, result is set to true and the prompt closes
+        yes.setOnAction(e -> {
+            answer = true;
+            window.close();
+        });
+
+        //If they answer no, result is set to false and the prompt closes
+        no.setOnAction(e -> {
+            answer = false;
+            window.close();
+        });
+
+        //The scene is created using a VBox layout
+        VBox layout = new VBox(5);
+        layout.getChildren().addAll(label, yes, no);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout);
+        window.setScene(scene);
+        window.showAndWait();
+
+        return answer;
     }
 
 }
-
