@@ -1,26 +1,19 @@
 package src.main;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import src.mechanics.Board;
 import src.mechanics.Frame;
 import src.mechanics.Pool;
 import src.mechanics.Square;
 import src.user.Player;
 import src.util.UI;
-import src.mechanics.Square;
 
 
 import java.util.ArrayList;
