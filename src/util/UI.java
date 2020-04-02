@@ -2,10 +2,15 @@ package src.util;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,11 +28,18 @@ import src.mechanics.Square;
 import src.user.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class UI extends Application {
 
-    public static Scrabble GAME = new Scrabble();
+    private Scrabble GAME  = new Scrabble();
+    //private TilePane gameBoard;
+    private ArrayList<Tile> tiles;
+
+    private GameBoard gameBoard = new GameBoard();
+
+
 
     public static void main(String[] args) {
         launch(args);
@@ -82,7 +94,7 @@ public class UI extends Application {
     private static Stage window;
     public TextField input = new TextField();
     public static TextArea output = new TextArea();
-    public Button submit = new Button();
+    public SubmitButton submit = new SubmitButton();
 
     Player currPlayer;
 
@@ -140,8 +152,9 @@ public class UI extends Application {
         console.getChildren().addAll(output,inputSpace,commandButtons);
 
         //Create and add the game board to the UI
-        GAME.setBoard(new Board());
-        mainWindow.getChildren().addAll(console,createBoard());
+        //GAME BOARD CREATED HERE
+        mainWindow.getChildren().addAll(console,gameBoard);
+        GAME.setBoard(gameBoard.getBoard());
 
         //Update the current player and print out their frame
         currPlayer = GAME.getCurrentPlayer();
@@ -175,9 +188,6 @@ public class UI extends Application {
                 default:
                     //Pass the players input to the method which allows the game to play
                     takeTurn(option);
-                    mainWindow.getChildren().remove(createBoard());
-                    mainWindow.getChildren().add(createBoard());
-
             }
         });
 
@@ -186,6 +196,134 @@ public class UI extends Application {
         mainStage.setScene(new Scene(mainWindow));
         mainStage.show();
 
+    }
+
+    private static class SubmitButton extends Button
+    {
+        public SubmitButton()
+        {
+            super();
+        }
+    }
+
+    private static class GameBoard extends GridPane
+    {
+        private Board board = new Board();
+
+        private int ROWS = board.rows();
+        private int COLS = board.cols();
+
+        public GameBoard()
+        {
+            super();
+
+            //Set Up The Board
+            for (int i = 0; i < ROWS; i++)
+            {
+                for (int j = 0; j < COLS; j++)
+                {
+                    Square sqr = board.getSquare(i, j);
+
+                    String squareValue = sqr.toString();
+
+                    this.addTile(squareValue, i, j);
+                }
+            }
+        }
+
+        public Board getBoard()
+        {
+            return board;
+        }
+
+        public void addTile(String t, int i, int j)
+        {
+            this.add(new Tile(t), i, j);
+        }
+
+        public void setTile(String t, int i, int j)
+        {
+            board.setSquare(i, j, t);
+        }
+
+        public void setWord(String word, int r, int c, char dir)
+        {
+            //TODO: Error Handling
+
+            String letter;
+
+            for(char ltr : word.toCharArray())
+            {
+                letter = String.valueOf(ltr);
+
+                System.out.println("Placing " + letter + " At " + r + "," + c);
+
+                board.setSquare(r, c, letter);
+
+                if  (dir == 'A') r++;
+                else             c++;
+            }
+        }
+
+        public void updateBoard()
+        {
+            int i = 0;
+            int j = 0;
+
+            for(Node n : getChildren())
+            {
+                Square sqr = board.getSquare(i, j);
+
+                String letter = sqr.toString();
+
+                System.out.println("Handl");
+                System.out.println("Setting " + letter + " At " + i + "," + j);
+
+                ((Tile)n).setLetter(String.valueOf(letter));
+
+                if(j == ROWS-1)
+                {
+                    j = 0;
+                    i++;
+                }
+                else
+                    j++;
+            }
+        }
+    }
+
+    private static class Tile extends Pane
+    {
+        Text letter = new Text();
+
+        public Tile(String l)
+        {
+            //Sets Where The Letter Is In Relation To It's Tile
+            letter.layoutXProperty().bind(this.widthProperty().subtract(23));
+            letter.layoutYProperty().bind(this.heightProperty().subtract(7));
+
+            String lStr = String.valueOf(l);
+
+            letter.setText(lStr);
+
+            this.getChildren().add(letter);
+
+            setStyle("-fx-background-color: #13db72;" +
+                     "-fx-border-color: black");
+
+            this.setPrefSize(25, 25);
+
+        }
+
+        public void setLetter(String l)
+        {
+            letter.setText(l);
+        }
+
+        public String getLetter()
+        {
+            return this.letter.getText().toString();
+        }
     }
 
 
@@ -222,13 +360,19 @@ public class UI extends Application {
             playerInput = input.getText();
 
             //Parse Input
-            WORD = GAME.getWord(playerInput);
+            WORD  = GAME.getWord(playerInput);
             COORD = GAME.getCoord(playerInput);
-            DIR = GAME.getDirection(playerInput);
+            DIR   = GAME.getDirection(playerInput);
 
             //True If User Places Valid Word
-            validMoveMade = GAME.getBoard().tileSelection(currPlayer, COORD[0], COORD[1],
+            validMoveMade = gameBoard.getBoard().tileSelection(currPlayer, COORD[0], COORD[1],
                     DIR, WORD, Scrabble.wordsOnBoard);
+
+            if(validMoveMade)
+            {
+                //TESTING
+                gameBoard.setWord(WORD, COORD[0]-1, COORD[1]-1, DIR);
+            }
 
             //RETRY MOVE
             if (!validMoveMade) {
@@ -248,17 +392,20 @@ public class UI extends Application {
             //Increment current turn
             GAME.incrementTurn();
 
-            //Update the current player
             currPlayer = GAME.getCurrentPlayer();
 
             //Prompt next player to choose their word
-            output.setText(output.getText() + "\n" + "Player 2 , Please enter your word");
+            output.setText(output.getText() + "\n" + currPlayer.nameP() + " - Please enter your word");
 
             //Show Player Their Frame
             if (validMoveMade) {
                 //Display the frame to player
                 output.setText(output.getText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
             }
+
+            gameBoard.updateBoard();
+
+            input.setText("");
 
 
             PLAYER_FINISHED = true;
@@ -316,8 +463,11 @@ public class UI extends Application {
             System.exit(0);
         }
     }
-
+/*
     public static class Tile extends StackPane {
+
+        Text text;
+
         public Tile(String a, int i, int j) {
 
             Rectangle border = new Rectangle(25, 25);
@@ -328,67 +478,14 @@ public class UI extends Application {
             GridPane.setColumnIndex(border, j);
 
 
-            Text text = new Text(a);
+            text = new Text(a);
             setAlignment(Pos.CENTER);
             getChildren().addAll(border, text);
 
         }
-    }
 
-    public Parent createBoard() {
-        TilePane gameBoard = new TilePane();
-
-        gameBoard.setPrefSize(700, 700);
-        gameBoard.setPrefRows(GAME.getBoard().rows());
-        gameBoard.setPrefColumns(GAME.getBoard().cols());
-
-        ArrayList<Tile> tiles = new ArrayList<Tile>();
-
-        GAME.setBoard(new Board());
-
-        Tile bt;
-
-        for (int i = 1; i <= GAME.getBoard().rows(); i++) {
-            for (int j = 1; j <= GAME.getBoard().cols(); j++) {
-
-                Square sqr = GAME.getBoard().getSquare(i, j);
-
-                String output;
-                String Tile = " ";
-
-                if (sqr.isOccupied()) {
-
-                    char tile = sqr.getTile();
-                    bt = new Tile(String.valueOf(tile), i, j);
-                } else {
-                    switch (sqr.getMultiplier()) {
-                        case DL:
-                            output = "DL";
-                            break;
-                        case DW:
-                            output = "DW";
-                            break;
-                        case TL:
-                            output = "TL";
-                            break;
-                        case TW:
-                            output = "TW";
-                            break;
-                        default:
-                            output = "  ";
-                    }
-
-                    bt = new Tile(String.valueOf(output), i, j);
-
-                }
-
-                tiles.add(bt);
-            }
-        }
-        gameBoard.getChildren().addAll(tiles);
-
-        return gameBoard;
-    }
+        public void setValue(String l) { text.setText(l); }
+    }*/
 
 
     /*

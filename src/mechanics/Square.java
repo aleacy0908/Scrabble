@@ -21,7 +21,7 @@ public class Square
 
     //Does A Letter Sit On The Square
     private boolean    is_occupied = false;
-    private char       letter;
+    private String     letter = " ";
 
     public Square()
     {
@@ -35,19 +35,15 @@ public class Square
         this.score_multiplier = multiplier;
     }
 
-    public void setTile(char t)
+    public void setLetter(String t)
     {
         this.is_occupied = true;
 
         this.letter = t;
     }
 
-    public char getTile()
+    public String getLetter()
     {
-        //Error Handling: Calling Func When There's No Tile
-        if(!isOccupied())
-            throw new RuntimeException("No Tile On Square");
-
         return this.letter;
     }
 
@@ -55,13 +51,41 @@ public class Square
     {
         if(this.isOccupied())
         {
-            this.letter = ' ';
+            this.letter = " ";
             this.is_occupied = false;
         }
     }
 
+    public String toString()
+    {
+        if (isOccupied())
+            return String.valueOf(getLetter());
+
+        String output = " ";
+
+        switch (this.getMultiplier())
+        {
+            case DL:
+                output = "DL";
+                break;
+            case DW:
+                output = "DW";
+                break;
+            case TL:
+                output = "TL";
+                break;
+            case TW:
+                output = "TW";
+                break;
+        }
+
+        return output;
+    }
+
     public SCORE_MULT getMultiplier() { return this.score_multiplier; }
     public void       setMultiplier(SCORE_MULT m) { this.score_multiplier = m; }
+
+    public boolean hasMultiplier() { return this.score_multiplier != SCORE_MULT.NONE; }
 
     public boolean isOccupied() { return this.is_occupied; }
 

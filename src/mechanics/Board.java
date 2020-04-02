@@ -74,7 +74,7 @@ public class Board {
 
             //For Each Coordinate In Our Pattern
             for (int[] coord : p.getPattern()) {
-                Square tmp = getSquare(coord[0], coord[1]);
+                Square tmp = getSquare(coord[0]-1, coord[1]-1);
 
                 tmp.setMultiplier(multID);
             }
@@ -83,27 +83,27 @@ public class Board {
 
     public Square getSquare(int x, int y) {
         //Error Handle: Invalid Coordinate
-        if (x < 1 || x > B_ROWS ||
-                y < 1 || y > B_COLS) {
+        if (x < 0 || x >= B_ROWS ||
+                y < 0 || y >= B_COLS) {
             throw new IllegalArgumentException("Invalid Coordinate");
         }
 
-        return BOARD[x - 1][y - 1];
+        return BOARD[x][y];
     }
 
-    public void setSquare(int x, int y, char t) {
+    public void setSquare(int x, int y, String t) {
 
         //Error Handle: Invalid Coordinate
-        if (x < 1 || x > B_ROWS ||
-                y < 1 || y > B_COLS) {
+        if (x < 0 || x >= B_ROWS ||
+                y < 0 || y >= B_COLS) {
             throw new IllegalArgumentException("Invalid Coordinate");
         }
 
-        BOARD[x - 1][y - 1].setTile(t);
+        BOARD[x][y].setLetter(t);
     }
 
     int i, j;
-    
+    /*
     public void DisplayBoard() {
   
 
@@ -157,14 +157,13 @@ public class Board {
                 "____________________________________\n");
 
 
-    }
+    }*/
 
    public void ResetBoard()
     {
+        for (i = 0; i < B_ROWS; i++) {
 
-        for (i = 1; i <= B_ROWS; i++) {
-
-            for (j = 1; j <= B_COLS; j++) {
+            for (j = 0; j < B_COLS; j++) {
 
                 Square sqr = getSquare(i, j);
 
@@ -267,6 +266,7 @@ public class Board {
 
             //Checks if the given word conflicts with any other words on the board
             if (conflicts(row, column, word, direction)) {
+                System.out.println(row + ", " + column);
                 System.out.println("New word on given grid ref conflicts with another word on the board");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
@@ -287,7 +287,7 @@ public class Board {
             for (int i = 0; i < word.length(); i++) {
                 tiles.add(word.charAt(i));
             }
-            fillSquare(word, row, column, direction, tiles);
+            //fillSquare(word, row, column, direction, tiles);
             player.getFrameP().removeFromFrame(tiles);
 
             numOfWordsOnBoard++;
@@ -315,11 +315,11 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
                     sqr = getSquare(row, column);
                     if (sqr.isOccupied()) {
-                        if (sqr.getTile() == word.charAt(i)) {
+                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
                             tiles.remove(Character.valueOf(word.charAt(i)));
                         }
                     }
-                    setSquare(row, column, word.charAt(i));
+                    setSquare(row, column, String.valueOf(word.charAt(i)));
                     row++;
 
                 }
@@ -329,11 +329,11 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
                     sqr = getSquare(row, column);
                     if (sqr.isOccupied()) {
-                        if (sqr.getTile() == word.charAt(i)) {
+                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
                             tiles.remove(Character.valueOf(word.charAt(i)));
                         }
                     }
-                    setSquare(row, column, word.charAt(i));
+                    setSquare(row, column, String.valueOf(word.charAt(i)));
                     column++;
 
                 }
@@ -394,7 +394,7 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
                     sqr = getSquare(row++, column);
                     if (sqr.isOccupied()) {
-                        if (sqr.getTile() == word.charAt(i)) {
+                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
                             count++;
                         }
                     }
@@ -405,7 +405,7 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
                     sqr = getSquare(row, column++);
                     if (sqr.isOccupied()) {
-                        if (sqr.getTile() == word.charAt(i)) {
+                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
                             count++;
                         }
                     }
@@ -428,7 +428,7 @@ public class Board {
         Square sqr = getSquare(x, y);
 
         if (sqr.isOccupied()) {
-            return sqr.getTile() == letter;
+            return sqr.getLetter() == String.valueOf(letter);
         }
 
         return false;
@@ -511,43 +511,30 @@ public class Board {
     been placed into that square.
      */
     public boolean conflicts(int x, int y, String word, char direction) {
-        boolean result = false;
+
         Square sqr;
 
-        switch (direction) {
-            case 'D':
+        for(char c : word.toCharArray())
+        {
+            sqr = getSquare(x, y);
+            String ltr = String.valueOf(c);
 
-                for (int i = 0; i < word.length(); i++) {
+            System.out.println("Checking " + c);
 
-                    sqr = getSquare(x++, y);
+            System.out.println(sqr.getLetter());
+            System.out.println(ltr);
 
-                    if (sqr.isOccupied()) {
-                        if ((word.charAt(i) == sqr.getTile())) {
-                            result = false;
-                        } else {
-                            result = true;
-                        }
-                    }
-                }
-                break;
+            //Check If Conflict
+            if(sqr.isOccupied() && !sqr.getLetter().equals(ltr))
+                return true;
 
-            case 'A':
-
-                for (int i = 0; i < word.length(); i++) {
-
-                    sqr = getSquare(x, y++);
-                    if (sqr.isOccupied()) {
-                        if ((word.charAt(i) == sqr.getTile())) {
-                            result = false;
-                        } else {
-                            result = true;
-                        }
-                    }
-                }
-                break;
+            //Move To Next Square
+            if     (direction == 'A') x++;
+            else if(direction == 'D') y++;
         }
 
-        return result;
+        //No Conflicts
+        return false;
     }
 
     /*
