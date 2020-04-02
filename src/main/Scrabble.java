@@ -1,4 +1,7 @@
 package src.main;
+import src.mechanics.GameBoard;
+
+
 
 import src.mechanics.Board;
 import src.user.Player;
@@ -6,7 +9,7 @@ import java.util.Scanner;
 
 public class Scrabble {
 
-    private Board    BOARD;
+    private GameBoard    BOARD;
     private Player[] players;
     public static int wordsOnBoard = 0;
     private int      numPlayers   = 0;
@@ -21,8 +24,8 @@ public class Scrabble {
     public Player   getCurrentPlayer() { return this.getPlayer(playerTurn); }
 
     //Get/Set For Board
-    public void     setBoard(Board b) { this.BOARD = b; }
-    public Board    getBoard()        { return this.BOARD; }
+    public void     setBoard(GameBoard b) { this.BOARD = b; }
+    public GameBoard    getBoard()        { return this.BOARD; }
 
     //Retrieve ALL Players
     public Player[] getPlayers() { return this.players; }

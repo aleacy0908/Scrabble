@@ -21,10 +21,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import src.main.Scrabble;
-import src.mechanics.Board;
-import src.mechanics.Frame;
-import src.mechanics.Pool;
-import src.mechanics.Square;
+import src.mechanics.*;
 import src.user.Player;
 
 import java.util.ArrayList;
@@ -33,13 +30,14 @@ import java.util.Iterator;
 
 public class UI extends Application {
 
-    private Scrabble GAME  = new Scrabble();
-    //private TilePane gameBoard;
-    private ArrayList<Tile> tiles;
-
+    private Scrabble  GAME      = new Scrabble();
     private GameBoard gameBoard = new GameBoard();
+    public  TextField input     = new TextField();
+    public  Button    submit    = new Button();
+    private Player    currPlayer;
 
-
+    public static  TextArea  output = new TextArea();
+    private static Stage     window;
 
     public static void main(String[] args) {
         launch(args);
@@ -91,16 +89,7 @@ public class UI extends Application {
 
     }
 
-    private static Stage window;
-    public TextField input = new TextField();
-    public static TextArea output = new TextArea();
-    public SubmitButton submit = new SubmitButton();
-
-    Player currPlayer;
-
     public void runGame(Stage mainStage){
-
-        mainStage.setTitle("Scrabble by The Pintsmen");
 
         //Whenever a close request is made, consume the request and load closeGame method
         mainStage.setOnCloseRequest(e -> {
@@ -154,7 +143,7 @@ public class UI extends Application {
         //Create and add the game board to the UI
         //GAME BOARD CREATED HERE
         mainWindow.getChildren().addAll(console,gameBoard);
-        GAME.setBoard(gameBoard.getBoard());
+        GAME.setBoard(gameBoard);
 
         //Update the current player and print out their frame
         currPlayer = GAME.getCurrentPlayer();
@@ -165,30 +154,10 @@ public class UI extends Application {
         help.setOnAction(e -> helpMessage());
         pass.setOnAction(e -> passTurn());
 
-        //When the user submits input from the textfield, parse whether it is a command or player input
+        //EventListener: When Submit Button Is Clicked
         submit.setOnAction(e -> {
-            String option = input.getText();
-            //Creating variables to parse the input
-            option = option.toUpperCase();
-
-            switch (option){
-
-                case ("QUIT"):
-                    closeGame();
-                    break;
-
-                case ("PASS"):
-                    passTurn();
-                    break;
-
-                case ("HELP"):
-                    helpMessage();
-                    break;
-
-                default:
-                    //Pass the players input to the method which allows the game to play
-                    takeTurn(option);
-            }
+            String playerInp = input.getText().toUpperCase();
+            takeTurn(playerInp);
         });
 
         //Disable allowing a user to manually change the game windows size
@@ -197,135 +166,6 @@ public class UI extends Application {
         mainStage.show();
 
     }
-
-    private static class SubmitButton extends Button
-    {
-        public SubmitButton()
-        {
-            super();
-        }
-    }
-
-    private static class GameBoard extends GridPane
-    {
-        private Board board = new Board();
-
-        private int ROWS = board.rows();
-        private int COLS = board.cols();
-
-        public GameBoard()
-        {
-            super();
-
-            //Set Up The Board
-            for (int i = 0; i < ROWS; i++)
-            {
-                for (int j = 0; j < COLS; j++)
-                {
-                    Square sqr = board.getSquare(i, j);
-
-                    String squareValue = sqr.toString();
-
-                    this.addTile(squareValue, i, j);
-                }
-            }
-        }
-
-        public Board getBoard()
-        {
-            return board;
-        }
-
-        public void addTile(String t, int i, int j)
-        {
-            this.add(new Tile(t), i, j);
-        }
-
-        public void setTile(String t, int i, int j)
-        {
-            board.setSquare(i, j, t);
-        }
-
-        public void setWord(String word, int r, int c, char dir)
-        {
-            //TODO: Error Handling
-
-            String letter;
-
-            for(char ltr : word.toCharArray())
-            {
-                letter = String.valueOf(ltr);
-
-                System.out.println("Placing " + letter + " At " + r + "," + c);
-
-                board.setSquare(r, c, letter);
-
-                if  (dir == 'A') r++;
-                else             c++;
-            }
-        }
-
-        public void updateBoard()
-        {
-            int i = 0;
-            int j = 0;
-
-            for(Node n : getChildren())
-            {
-                Square sqr = board.getSquare(i, j);
-
-                String letter = sqr.toString();
-
-                System.out.println("Handl");
-                System.out.println("Setting " + letter + " At " + i + "," + j);
-
-                ((Tile)n).setLetter(String.valueOf(letter));
-
-                if(j == ROWS-1)
-                {
-                    j = 0;
-                    i++;
-                }
-                else
-                    j++;
-            }
-        }
-    }
-
-    private static class Tile extends Pane
-    {
-        Text letter = new Text();
-
-        public Tile(String l)
-        {
-            //Sets Where The Letter Is In Relation To It's Tile
-            letter.layoutXProperty().bind(this.widthProperty().subtract(23));
-            letter.layoutYProperty().bind(this.heightProperty().subtract(7));
-
-            String lStr = String.valueOf(l);
-
-            letter.setText(lStr);
-
-            this.getChildren().add(letter);
-
-            setStyle("-fx-background-color: #13db72;" +
-                     "-fx-border-color: black");
-
-            this.setPrefSize(25, 25);
-
-        }
-
-        public void setLetter(String l)
-        {
-            letter.setText(l);
-        }
-
-        public String getLetter()
-        {
-            return this.letter.getText().toString();
-        }
-    }
-
 
     /*
     This method will execute each time a player submits their input
@@ -403,8 +243,6 @@ public class UI extends Application {
                 output.setText(output.getText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
             }
 
-            gameBoard.updateBoard();
-
             input.setText("");
 
 
@@ -413,7 +251,6 @@ public class UI extends Application {
 
 
     }
-
 
     //Simply used to print a players frame to the UI
     public ArrayList<Character> printFrame(){
@@ -463,30 +300,6 @@ public class UI extends Application {
             System.exit(0);
         }
     }
-/*
-    public static class Tile extends StackPane {
-
-        Text text;
-
-        public Tile(String a, int i, int j) {
-
-            Rectangle border = new Rectangle(25, 25);
-            border.setFill(Color.GREEN);
-            border.setStroke(Color.WHITE);
-
-            GridPane.setRowIndex(border, i);
-            GridPane.setColumnIndex(border, j);
-
-
-            text = new Text(a);
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(border, text);
-
-        }
-
-        public void setValue(String l) { text.setText(l); }
-    }*/
-
 
     /*
     This is a general method made so
