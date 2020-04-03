@@ -175,7 +175,7 @@ public class Board {
             rather than only using words from the board.
              */
             if (!necessaryLetters(word, player, row, column, direction)) {
-                System.out.println("Invalid word picked");
+                alert.showBox("Error", "Invalid word picked");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
                 return false;
@@ -186,14 +186,14 @@ public class Board {
             //word on the board
             if (numOfWordsOnBoard == 0) {
                 if (!firstWord(row, column, word, direction)) {
-                    System.out.println("First played word must start at the centre of the board");
+                    alert.showBox("Error", "First played word must start at the centre of the board");
                     player.getFrameP().frame.clear();
                     player.getFrameP().frame.addAll(backup);
                     return false;
                 }
             } else {
                 if (!connectsToWord(row, column, word, direction)) {
-                    System.out.println("New word must be connected to another word");
+                    alert.showBox("Error", "New word must be connected to another word");
                     player.getFrameP().frame.clear();
                     player.getFrameP().frame.addAll(backup);
                     return false;
@@ -203,7 +203,7 @@ public class Board {
             //Checks if the given word goes outside of the boards bounds
             //or if a invalid grid ref was given
             if (!withinBoard(row, column, direction, word)) {
-                System.out.println("Out of board bounds");
+                alert.showBox("Error", "Out of board bounds");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
                 return false;
@@ -212,13 +212,11 @@ public class Board {
 
             //Checks if the given word conflicts with any other words on the board
             if (conflicts(row, column, word, direction)) {
-                System.out.println(row + ", " + column);
-                System.out.println("New word on given grid ref conflicts with another word on the board");
+                alert.showBox("Error", "New word on given grid ref conflicts with another word on the board");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
                 return false;
             }
-
 
             System.out.println("Word placed : " + word);
 
