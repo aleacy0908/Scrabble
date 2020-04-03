@@ -162,6 +162,7 @@ public class Board {
 
             //If the user didn't enter A or D, the player must try again
             if ((direction != 'D') && (direction != 'A')) {
+                System.out.println("Direction: " + direction);
                 alert.showBox("Error", "Invalid direction entered");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
@@ -372,7 +373,7 @@ public class Board {
         Square sqr = getSquare(x, y);
 
         if (sqr.isOccupied()) {
-            return sqr.getLetter() == String.valueOf(letter);
+            return sqr.getLetter().equals(String.valueOf(letter));
         }
 
         return false;
@@ -398,6 +399,9 @@ public class Board {
 
             usesLettersFromFrame = player.getFrameP().checkLettersInFrame(word.charAt(i));
             onBoardAlready = letterPresentOnBoard(word.charAt(i), row, column);
+
+            System.out.println("Letters: " + usesLettersFromFrame);
+            System.out.println("onBoard: " + onBoardAlready);
 
             if (!usesLettersFromFrame && !onBoardAlready) {
                 return false;
