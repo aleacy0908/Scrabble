@@ -144,7 +144,6 @@ public class Board {
         AlertBox alert = new AlertBox();
         int numOfWordsOnBoard = GAME.getWordsOnBoard();
         boolean playerFinished = false;
-        Scanner letter = new Scanner(System.in);
 
         //Loop doesn't break until the player has selected and placed a word on the board
         while (!playerFinished) {
@@ -218,7 +217,6 @@ public class Board {
                 return false;
             }
 
-            System.out.println("Word placed : " + word);
 
             /*
             Once the player has chosen their word and it has passed all the necessary checks,
@@ -235,9 +233,7 @@ public class Board {
             GAME.getGUIBoard().setWord(word, row, column, direction);
             player.getFrameP().removeFromFrame(tiles);
 
-            System.out.println(numOfWordsOnBoard);
             GAME.setWordsOnBoard(numOfWordsOnBoard++);
-            System.out.println(numOfWordsOnBoard);
 
             playerFinished = true;
 
@@ -268,7 +264,7 @@ public class Board {
                         }
                     }
                     setSquare(row, column, String.valueOf(word.charAt(i)));
-                    column++;
+                    row++;
 
                 }
                 break;
@@ -282,7 +278,7 @@ public class Board {
                         }
                     }
                     setSquare(row, column, String.valueOf(word.charAt(i)));
-                    row++;
+                    column++;
 
                 }
                 break;
@@ -302,21 +298,21 @@ public class Board {
         boolean withinBounds = true;
         int length;
 
-        if ((x > 15 || x < 1) || (y > 15 || y < 1)) {
+        if ((x > 14 || x < 0) || (y > 14 || y < 0)) {
             withinBounds = false;
         }
 
         switch (direction) {
             case 'D':
                 length = (x + word.length()) - 1;
-                if (length > 15) {
+                if (length > 14) {
                     withinBounds = false;
                 }
                 break;
 
             case 'A':
                 length = (y + word.length()) - 1;
-                if (length > 15) {
+                if (length > 14) {
                     withinBounds = false;
                 }
                 break;
@@ -477,8 +473,8 @@ public class Board {
                 return true;
 
             //Move To Next Square
-            if     (direction == 'A') x++;
-            else if(direction == 'D') y++;
+            if     (direction == 'A') y++;
+            else if(direction == 'D') x++;
         }
 
         //No Conflicts
@@ -498,7 +494,8 @@ public class Board {
             case 'D':
 
                 for (int i = 0; i < word.length(); i++) {
-                    if ((i + row) == 8 && column == 8) {
+                    if ((i + row) == 7 && column == 7) {
+
                         isOnCentre = true;
                         break;
                     }
@@ -508,7 +505,7 @@ public class Board {
             case 'A':
 
                 for (int i = 0; i < word.length(); i++) {
-                    if ((i + column) == 8 && row == 8) {
+                    if ((i + column) == 7 && row == 7) {
                         isOnCentre = true;
                         break;
                     }
