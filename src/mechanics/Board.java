@@ -1,5 +1,8 @@
 package src.mechanics;
 
+import src.UI.AlertBox;
+import src.UI.InputPromptBox;
+import src.main.Scrabble;
 import src.mechanics.Square.*;
 
 import src.user.Player;
@@ -121,12 +124,14 @@ public class Board {
 
     }
 
+    int numOfWordsOnBoard = 0;
+
     /*
     This method is where the player is given
     the ability to place a word onto the
     scrabble board.
      */
-    public boolean tileSelection(Player player, int row, int column, char direction, String word, int numOfWordsOnBoard) {
+    public boolean tileSelection(Player player, int row, int column, char direction, String word, Scrabble GAME) {
 
         /*
         A backup is made of the players frame before selecting
@@ -136,6 +141,8 @@ public class Board {
          */
         ArrayList<Character> backup = new ArrayList<>(player.getFrameP().getFrame());
 
+        AlertBox alert = new AlertBox();
+        int numOfWordsOnBoard = GAME.getWordsOnBoard();
         boolean playerFinished = false;
         Scanner letter = new Scanner(System.in);
 
@@ -143,26 +150,20 @@ public class Board {
         while (!playerFinished) {
 
             if (word.length() < 2) {
-                System.out.println("Word must have 2 letters or more");
+                alert.showBox("Error", "Word must have 2 letters or more");
                 break;
             }
 
             //Allows the player to add a letter of their choice
-            if (word.contains("_")) {
-                for (int i = 0; i < word.length(); i++) {
-                    if (word.charAt(i) == '_') {
-                        System.out.println("Please select a letter you would like to enter for '_':");
-                        String tmp = letter.next().toUpperCase();
-                        word = word.replaceFirst("_", tmp);
-                        player.getFrameP().frame.remove(Character.valueOf('_'));
-                        player.getFrameP().frame.add(tmp.charAt(0));
-                    }
-                }
+            while (word.contains("_")) {
+                InputPromptBox replaceChar = new InputPromptBox();
+                replaceChar.showBox(word, player);
+                word = replaceChar.getPlayersInput();
             }
 
             //If the user didn't enter A or D, the player must try again
             if ((direction != 'D') && (direction != 'A')) {
-                System.out.println("Invalid direction entered");
+                alert.showBox("Error", "Invalid direction entered");
                 player.getFrameP().frame.clear();
                 player.getFrameP().frame.addAll(backup);
                 return false;
@@ -232,10 +233,14 @@ public class Board {
             for (int i = 0; i < word.length(); i++) {
                 tiles.add(word.charAt(i));
             }
-            //fillSquare(word, row, column, direction, tiles);
+            fillSquare(word, row, column, direction, tiles);
+            GAME.getGUIBoard().setWord(word, row, column, direction);
             player.getFrameP().removeFromFrame(tiles);
 
-            numOfWordsOnBoard++;
+            System.out.println(numOfWordsOnBoard);
+            GAME.setWordsOnBoard(numOfWordsOnBoard++);
+            System.out.println(numOfWordsOnBoard);
+
             playerFinished = true;
 
         }
@@ -251,7 +256,7 @@ public class Board {
     is already present on the board, it is removed from the list of letters
     that are going to be removed from a players frame.
      */
-    private void fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles) {
+    public void fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles) {
 
         Square sqr;
 
@@ -265,7 +270,7 @@ public class Board {
                         }
                     }
                     setSquare(row, column, String.valueOf(word.charAt(i)));
-                    row++;
+                    column++;
 
                 }
                 break;
@@ -279,7 +284,7 @@ public class Board {
                         }
                     }
                     setSquare(row, column, String.valueOf(word.charAt(i)));
-                    column++;
+                    row++;
 
                 }
                 break;

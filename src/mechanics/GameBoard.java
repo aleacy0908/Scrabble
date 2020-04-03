@@ -62,15 +62,15 @@ public class GameBoard extends GridPane
     {
         String letter;
 
-        for(char ltr : word.toCharArray())
-        {
-            letter = String.valueOf(ltr);
-
-            board.setSquare(r, c, letter);
-
-            if  (dir == 'A') r++;
-            else             c++;
-        }
+//        for(char ltr : word.toCharArray())
+//        {
+//            letter = String.valueOf(ltr);
+//
+//            board.setSquare(r, c, letter);
+//
+//            if  (dir == 'A') r++;
+//            else             c++;
+//        }
 
         refreshBoard();
     }

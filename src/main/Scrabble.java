@@ -20,6 +20,10 @@ public class Scrabble {
     //How Many Words Are On The Board
     public int      getWordsOnBoard() { return this.wordsOnBoard; }
 
+    public void setWordsOnBoard(int wordsOnBoard) {
+        Scrabble.wordsOnBoard = wordsOnBoard;
+    }
+
     //Return Player Who's Turn It Is
     public Player   getCurrentPlayer() { return this.getPlayer(playerTurn); }
 
@@ -80,14 +84,14 @@ public class Scrabble {
     {
         int[] spaces = getSpaces(s);
 
-        return s.substring(spaces[2]+1);
+        return s.substring(spaces[2]+1).toUpperCase();
     }
 
     public static char getDirection(String s)
     {
         int[] spaces = getSpaces(s);
 
-        return s.charAt(spaces[1] + 1);
+        return s.toUpperCase().charAt(spaces[1] + 1);
     }
 
     public static int[] getCoord(String s)

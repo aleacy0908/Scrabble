@@ -94,6 +94,7 @@ public class MainActivity extends Application {
         //EventListener: When Submit Button Is Clicked
         mainWindow.getSubmitButton().setOnAction(e -> {
             String playerInp = mainWindow.getInputBoxText().toUpperCase();
+            System.out.println(mainWindow.input.getText());
             takeTurn(playerInp);
         });
 
@@ -138,14 +139,17 @@ public class MainActivity extends Application {
             WORD  = GAME.getWord(playerInput);
             COORD = GAME.getCoord(playerInput);
             DIR   = GAME.getDirection(playerInput);
+            System.out.println(DIR);
 
             //True If User Places Valid Word
-            validMoveMade = GAME.getGUIBoard().getBoardMechanics().tileSelection(currPlayer, COORD[0], COORD[1],
-                    DIR, WORD, Scrabble.wordsOnBoard);
+            validMoveMade = GAME.getGUIBoard().getBoardMechanics().tileSelection(currPlayer, COORD[0]-1, COORD[1]-1,
+                    DIR, WORD, GAME);
 
             if(validMoveMade)
             {
-                GAME.getGUIBoard().setWord(WORD, COORD[0]-1, COORD[1]-1, DIR);
+                GAME.setWordsOnBoard(GAME.getWordsOnBoard() + 1);
+            }else{
+                break;
             }
 
             //RETRY MOVE
