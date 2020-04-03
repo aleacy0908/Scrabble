@@ -33,6 +33,7 @@ public class GameBoard extends GridPane
                 sqr = board.getSquare(i, j);
                 value = sqr.toString();
 
+
                 //Add A Tile To The Board
                 //Using This Information
                 this.addTile(value, i, j);
@@ -60,18 +61,6 @@ public class GameBoard extends GridPane
     //Places A Word On The Board
     public void setWord(String word, int r, int c, char dir)
     {
-        String letter;
-
-//        for(char ltr : word.toCharArray())
-//        {
-//            letter = String.valueOf(ltr);
-//
-//            board.setSquare(r, c, letter);
-//
-//            if  (dir == 'A') r++;
-//            else             c++;
-//        }
-
         refreshBoard();
     }
 
@@ -89,13 +78,13 @@ public class GameBoard extends GridPane
 
             ((Tile)n).setLetter(String.valueOf(letter));
 
-            if(j == ROWS-1)
+            if(i == COLS-1)
             {
-                j = 0;
-                i++;
+                i = 0;
+                j++;
             }
             else
-                j++;
+                i++;
         }
     }
 }
