@@ -24,8 +24,8 @@ public class Scrabble {
     public Player   getCurrentPlayer() { return this.getPlayer(playerTurn); }
 
     //Get/Set For Board
-    public void     setBoard(GameBoard b) { this.BOARD = b; }
-    public GameBoard    getBoard()        { return this.BOARD; }
+    public void         setGUIBoard(GameBoard b) { this.BOARD = b; }
+    public GameBoard    getGUIBoard()        { return this.BOARD; }
 
     //Retrieve ALL Players
     public Player[] getPlayers() { return this.players; }

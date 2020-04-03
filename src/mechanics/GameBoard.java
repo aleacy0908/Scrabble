@@ -42,7 +42,7 @@ public class GameBoard extends GridPane
         refreshBoard();
     }
 
-    public Board getBoard() { return board; }
+    public Board getBoardMechanics() { return board; }
 
     //Change Value Of Tile (IS Setting Letter)
     public void setLetter(String t, int i, int j) {

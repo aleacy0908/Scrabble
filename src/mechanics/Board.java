@@ -103,61 +103,6 @@ public class Board {
     }
 
     int i, j;
-    /*
-    public void DisplayBoard() {
-  
-
-        System.out.println("");
-        System.out.println("                                                SCRABBLE BOARD                " +
-                "                         ");
-
-
-        for (i = 1; i <= B_ROWS; i++) {
-            System.out.println("");
-            System.out.print("  ________________________________________________________" +
-                    "__________________________________________________\n");
-
-            for (j = 1; j <= B_COLS; j++) {
-
-                Square sqr = getSquare(i, j);
-
-                if (sqr.isOccupied()) {
-                    char tile = sqr.getTile();
-
-                    System.out.print("  |  " + tile + " ");
-                } else {
-                    String output;
-
-                    switch (sqr.getMultiplier()) {
-                        case DL:
-                            output = "DL";
-                            break;
-                        case DW:
-                            output = "DW";
-                            break;
-                        case TL:
-                            output = "TL";
-                            break;
-                        case TW:
-                            output = "TW";
-                            break;
-                        default:
-                            output = "  ";
-                    }
-
-                    System.out.print("  | " + output + " ");
-                }
-
-            }
-            System.out.print("  |");
-        }
-
-        System.out.println("");
-        System.out.print("  ______________________________________________________________________" +
-                "____________________________________\n");
-
-
-    }*/
 
    public void ResetBoard()
     {
