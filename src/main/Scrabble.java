@@ -84,25 +84,43 @@ public class Scrabble {
     {
         int[] spaces = getSpaces(s);
 
-        return s.substring(spaces[2]+1).toUpperCase();
+        return s.substring(spaces[1]+1).toUpperCase();
     }
 
     public static char getDirection(String s)
     {
         int[] spaces = getSpaces(s);
 
-        return s.toUpperCase().charAt(spaces[1] + 1);
+        return s.toUpperCase().charAt(spaces[0] + 1);
     }
 
     public static int[] getCoord(String s)
     {
+        int x = 0;
+        int y = 0;
         int[] spaces = getSpaces(s);
+        String coords = s.substring(0,spaces[0]).toUpperCase();
 
-        String x = s.substring(0, spaces[0]);
-        String y = s.substring(spaces[0] + 1, spaces[1]);
+        if(coords.length() == 2){
+            char yTmp = coords.charAt(0);
+            char xTmp = coords.charAt(1);
+
+            x = Character.getNumericValue(xTmp);
+            y = yTmp - 64;
+
+        }else if (coords.length() == 3){
+            char yTmp = coords.charAt(0);
+            String xTmp = Character.toString(coords.charAt(1)) + Character.toString(coords.charAt(2));
+
+            x = Integer.parseInt(xTmp);
+            y = yTmp - 64;
+        }
+
+
+        System.out.println(x +" "+ y + " FGDGSDGHDFHDFH");
 
         return new int[] {
-                Integer.parseInt(x), Integer.parseInt(y) };
+                x, y };
     }
 
     public static int[] getSpaces(String s)
@@ -110,12 +128,12 @@ public class Scrabble {
         //Index Of Space Characters
         int spc  = s.indexOf(' ');
         int spc2 = s.indexOf(' ', spc + 1);
-        int spc3 = s.indexOf(' ', spc2+1);
+        //int spc3 = s.indexOf(' ', spc2+1);
 
         //Error Handling
-        if(spc == -1 || spc2 == -1 || spc3 == -1)
+        if(spc == -1 || spc2 == -1)
             throw new IllegalArgumentException("Invalid Input");
 
-        return new int[]{spc, spc2, spc3};
+        return new int[]{spc, spc2};
     }
 }

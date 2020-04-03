@@ -135,6 +135,8 @@ public class MainActivity extends Application {
 
             playerInput = mainWindow.getInputBoxText();
 
+
+
             //Parse Input
             WORD  = GAME.getWord(playerInput);
             COORD = GAME.getCoord(playerInput);
@@ -152,11 +154,6 @@ public class MainActivity extends Application {
                 break;
             }
 
-            //RETRY MOVE
-            if (!validMoveMade) {
-                PLAYER_FINISHED = true;
-            }
-
             //Valid Move, Thus Find Out Word Score
             int wordScore = currPlayer.calculateScore(WORD, COORD[0], COORD[1], DIR);
 
@@ -165,7 +162,7 @@ public class MainActivity extends Application {
 
             //Print Out Score
             mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + WORD + " is Worth " + wordScore + " Points!");
-            mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + pName + "'s Score Is " + currPlayer.getScore() + "\n\n");
+            mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + pName + "'s Score Is " + currPlayer.getScore());
 
             //Increment current turn
             GAME.incrementTurn();
@@ -176,10 +173,8 @@ public class MainActivity extends Application {
             mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + " - Please enter your word");
 
             //Show Player Their Frame
-            if (validMoveMade) {
-                //Display the frame to player
-                mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
-            }
+            mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
+
 
             mainWindow.setInputBoxText("");
 
