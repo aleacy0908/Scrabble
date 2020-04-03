@@ -1,5 +1,6 @@
 package src.UI;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -39,7 +40,7 @@ public class AlertBox extends Stage {
     public void showBox(String title, String message)
     {
         window = new Stage();
-        window.setMaxWidth(350);
+        window.setMaxWidth(480);
         window.setMinWidth(250);
 
         //Blocks the player from interacting with other windows until this alert is closed
@@ -56,6 +57,7 @@ public class AlertBox extends Stage {
 
         //A scene with VBox layout is created
         VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10,10,10,10));
         layout.getChildren().addAll(msgLabel, okBtn);
         layout.setAlignment(Pos.CENTER);
 
