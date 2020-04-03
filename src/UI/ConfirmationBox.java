@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 public class ConfirmationBox extends Stage
 {
-    private Stage window;
+    Stage window;
 
     private Button yesBtn = new Button("Yes");
     private Button noBtn  = new Button("No");

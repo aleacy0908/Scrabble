@@ -31,7 +31,7 @@ public class CloseGameBox extends ConfirmationBox {
         super.getNoBtn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                close();
+                CloseGameBox.super.window.close();
             }
         });
 
