@@ -131,7 +131,7 @@ public class DictionaryTree {
         }
         catch(IOException ex)
         {
-            System.out.println("Unable To Read In Dictionary");
+            System.out.println(ex.getLocalizedMessage().toString());
         }
     }
 
@@ -206,5 +206,4 @@ public class DictionaryTree {
     }
 
     public void print() { print(head); }
-
 }

@@ -27,14 +27,16 @@ public class Scrabble {
     }
 
     //How Many Words Are On The Board
-    public int      getWordsOnBoard() { return this.wordsOnBoard; }
+    public int  getWordsOnBoard() { return this.wordsOnBoard; }
+    public void decrementWordsOnBoard() { wordsOnBoard--; }
 
     public void setWordsOnBoard(int wordsOnBoard) {
         Scrabble.wordsOnBoard = wordsOnBoard;
     }
 
     //Return Player Who's Turn It Is
-    public Player   getCurrentPlayer() { return this.getPlayer(playerTurn); }
+    public Player   getCurrentPlayer()  { return this.getPlayer(playerTurn); }
+    public Player   getPreviousPlayer() { return this.getPlayer((playerTurn + 1) % numPlayers); }
 
     //Get/Set For Board
     public void         setGUIBoard(GameBoard b) { this.BOARD = b; }

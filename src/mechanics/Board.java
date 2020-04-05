@@ -105,6 +105,17 @@ public class Board {
         BOARD[x][y].setLetter(t);
     }
 
+    public void clearSquare(int x, int y)
+    {
+        //Error Handle: Invalid Coordinate
+        if (x < 0 || x >= B_ROWS ||
+                y < 0 || y >= B_COLS) {
+            throw new IllegalArgumentException("Invalid Coordinate");
+        }
+
+        BOARD[x][y].clearSquare();
+    }
+
     int i, j;
 
    public void ResetBoard()
@@ -116,7 +127,7 @@ public class Board {
                 Square sqr = getSquare(i, j);
 
                 if (sqr.isOccupied()) {
-                    sqr.clearTile();
+                    sqr.clearSquare();
                 }
 
             }
@@ -139,6 +150,11 @@ public class Board {
 
         //Loop doesn't break until the player has selected and placed a word on the board
         while (!playerFinished) {
+
+            if(word.equals("CHALLENGE"))
+            {
+                return true;
+            }
 
             if (word.length() < 2) {
                 alert.showBox("Error", "Word must have 2 letters or more");
@@ -203,7 +219,8 @@ public class Board {
             for (int i = 0; i < word.length(); i++) {
                 tiles.add(word.charAt(i));
             }
-            tiles = fillSquare(word, row, column, direction, tiles);
+
+
             GAME.getGUIBoard().setWord(word, row, column, direction);
             player.getFrameP().removeFromFrame(tiles);
 
@@ -373,16 +390,12 @@ public class Board {
             usesLettersFromFrame = player.getFrameP().checkLettersInFrame(word.charAt(i));
             onBoardAlready = letterPresentOnBoard(word.charAt(i), row, column);
 
-            System.out.println("Letters: " + usesLettersFromFrame);
-            System.out.println("onBoard: " + onBoardAlready);
-
             if (!usesLettersFromFrame && !onBoardAlready) {
                 return false;
             }
         }
 
         if (usesOnlyFromBoard(word, row, column, direction)) {
-            System.out.println("Uses only from board");
             usesLettersFromFrame = false;
         }
 
@@ -439,11 +452,6 @@ public class Board {
         {
             sqr = getSquare(x, y);
             String ltr = String.valueOf(c);
-
-            System.out.println("Checking " + c);
-
-            System.out.println(sqr.getLetter());
-            System.out.println(ltr);
 
             //Check If Conflict
             if(sqr.isOccupied() && !sqr.getLetter().equals(ltr))

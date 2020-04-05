@@ -98,7 +98,6 @@ public class MainActivity extends Application {
         //EventListener: When Submit Button Is Clicked
         mainWindow.getSubmitButton().setOnAction(e -> {
             String playerInp = mainWindow.getInputBoxText().toUpperCase();
-            System.out.println(mainWindow.input.getText());
             takeTurn(playerInp);
         });
 
@@ -113,6 +112,16 @@ public class MainActivity extends Application {
     This method will execute each time a player submits their input
     into the UI. It will allow players to interact with and play the game.
      */
+
+    String prevWord  = null;
+    int  prevScore = 0;
+    int  prevRow = 0;
+    int  prevCol = 0;
+    char prevDir = 'A';
+    boolean nextPlayersTurnPassed = false;
+    Player  invalidPlayer = new Player("Placeholder");
+    boolean postChallengeMove = false;
+
     public void takeTurn(String playerInput){
         boolean PLAYER_FINISHED = false;
         boolean EXIT_GAME = false;
@@ -122,9 +131,9 @@ public class MainActivity extends Application {
         values for the coordinates, word
         and direction the user entered */
 
-        int[] COORD = new int[2];
+        int[]  COORD = new int[2];
         String WORD;
-        char DIR;
+        char   DIR;
 
         //Did The User Make A Valid Move?
         //Can We Move Onto The Next Move?
@@ -147,11 +156,60 @@ public class MainActivity extends Application {
 
             playerInput = mainWindow.getInputBoxText();
 
+            //If its a challenge and the challenge
+            //is not made on the first turn of the game
+            if(playerInput.equals("CHALLENGE") && prevWord != null)
+            {
+                boolean invalidChallenge = GAME.getDict().check(prevWord);
+
+                if(invalidChallenge)
+                {
+                    mainWindow.setOutputText("INVALID CHALLENGE");
+                    passTurn();
+                }
+                else
+                {
+                    //Remove word from board
+                    GAME.decrementWordsOnBoard();
+                    GAME.getGUIBoard().removeWord(prevWord, prevRow-1, prevCol-1, prevDir);
+
+                    //Decrease score
+                    GAME.getPreviousPlayer().decreaseScore(prevScore);
+
+                    //Print Output
+                    mainWindow.setOutputText(mainWindow.getOutputText() +
+                            "VALID CHALLENGE\n" +
+                            "Removing " + prevWord +
+                            "\nDecreasing Player's Score By " + prevScore +
+                            "\nPlease Continue Your Go");
+
+                    //Next players turn passed
+                    nextPlayersTurnPassed = true;
+                    invalidPlayer = GAME.getPreviousPlayer();
+
+                    //Prompt next player to choose their word
+                    mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + " - Please enter your word");
+
+                    //Show Player Their Frame
+                    mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
+
+                    postChallengeMove = true;
+
+                    //Take turn again
+                    return;
+                }
+
+            }
+            else if(playerInput.equals("CHALLENGE") && prevWord == null)
+            {
+                mainWindow.setOutputText(mainWindow.getOutputText() + "\nCannot Challenge On First Round\n");
+                return;
+            }
+
             //Parse Input
             WORD  = GAME.getWord(playerInput);
             COORD = GAME.getCoord(playerInput);
             DIR   = GAME.getDirection(playerInput);
-            System.out.println(DIR);
 
             //Allows the player to add a letter of their choice
             while (WORD.contains("_")) {
@@ -202,16 +260,43 @@ public class MainActivity extends Application {
 
             currPlayer = GAME.getCurrentPlayer();
 
-            //Prompt next player to choose their word
-            mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + " - Please enter your word");
-
-            //Show Player Their Frame
-            mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
-
-
-            mainWindow.setInputBoxText("");
+            //Relevant if the next player
+            //challenges the previous word
+            prevWord  = WORD;
+            prevScore = wordScore;
+            prevRow   = COORD[0];
+            prevCol   = COORD[1];
+            prevDir   = DIR;
 
             PLAYER_FINISHED = true;
+
+            if(postChallengeMove)
+            {
+                GAME.incrementTurn();
+
+                mainWindow.setOutputText(
+                        mainWindow.getOutputText() +
+                                "\n\nTurn Is Passed Due To Loss Of Challenge\n\n" +
+                        GAME.getCurrentPlayer().nameP() +
+                        ": Please Make Another Move: \n" +
+                        printFrame() +
+                        "\n\n");
+
+                postChallengeMove = false;
+
+                return;
+            }
+            else
+            {
+                //Prompt next player to choose their word
+                mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + " - Please enter your word");
+
+                //Show Player Their Frame
+                mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + currPlayer.nameP() + "'s Frame: " + printFrame() + "\n");
+
+
+                mainWindow.setInputBoxText("");
+            }
         }
 
 

@@ -22,6 +22,7 @@ public class Square
     //Does A Letter Sit On The Square
     private boolean    is_occupied = false;
     private String     letter = " ";
+    private int numWordsUsingTile = 0;
 
     public Square()
     {
@@ -35,6 +36,45 @@ public class Square
         this.score_multiplier = multiplier;
     }
 
+    public void incrementNumWordsUsingTile()
+    {
+        System.out.println();
+        System.out.println("Incrementing " + letter);
+        System.out.println("IsOccupied: " + isOccupied());
+        System.out.println("numWordsUsingTile: " + numWordsUsingTile);
+        System.out.println();
+
+        numWordsUsingTile++;
+    }
+
+    public void decrementNumWordsUsingTile()
+    {
+        System.out.println();
+        System.out.println("DecrementingI hav " + letter);
+        System.out.println("IsOccupied: " + isOccupied());
+        System.out.println("numWordsUsingTile: " + numWordsUsingTile);
+        System.out.println();
+
+        if(numWordsUsingTile != 0)
+            numWordsUsingTile--;
+    }
+
+    public int getNumWordsUsingTile()
+    {
+        return this.numWordsUsingTile;
+    }
+
+    public void clearSquare()
+    {
+        if(isOccupied())
+        {
+            is_occupied = false;
+            letter = " ";
+        }
+
+        numWordsUsingTile = 0;
+    }
+
     public void setLetter(String t)
     {
         this.is_occupied = true;
@@ -45,15 +85,6 @@ public class Square
     public String getLetter()
     {
         return this.letter;
-    }
-
-    void clearTile()
-    {
-        if(this.isOccupied())
-        {
-            this.letter = " ";
-            this.is_occupied = false;
-        }
     }
 
     public String toString()

@@ -61,6 +61,42 @@ public class GameBoard extends GridPane
     //Places A Word On The Board
     public void setWord(String word, int r, int c, char dir)
     {
+        String letter;
+
+        for (char ltr : word.toCharArray())
+        {
+            letter = String.valueOf(ltr);
+
+            System.out.println(r + " " + c);
+            System.out.println(word);
+
+            board.setSquare(r, c, letter);
+            board.getSquare(r, c).incrementNumWordsUsingTile();
+
+            if(dir == 'A') c++;
+            else           r++;
+        }
+
+        refreshBoard();
+    }
+
+    public void removeWord(String word, int r, int c, char dir)
+    {
+        for (int i = 0; i < word.length(); i++)
+        {
+            Square sqr = board.getSquare(r, c);
+
+            //If a tile is being used by more than
+            //one word, then we dont want to remove it
+            if(sqr.getNumWordsUsingTile() < 2)
+                board.clearSquare(r, c);
+
+            board.getSquare(r,c).decrementNumWordsUsingTile();
+
+            if(dir == 'A') c++;
+            else           r++;
+        }
+
         refreshBoard();
     }
 
