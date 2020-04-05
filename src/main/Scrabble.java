@@ -1,21 +1,30 @@
 package src.main;
 import src.mechanics.GameBoard;
 
-
-
-import src.mechanics.Board;
+import src.mechanics.DictionaryTree;
 import src.user.Player;
 import java.util.Scanner;
 
 public class Scrabble {
 
-    private GameBoard    BOARD;
-    private Player[] players;
+    private GameBoard BOARD;
+    private Player[]  players;
     public static int wordsOnBoard = 0;
-    private int      numPlayers   = 0;
-    private int      playerTurn   = 0;
+    private int       numPlayers   = 0;
+    private int       playerTurn   = 0;
 
-    public          Scrabble() {}
+    private DictionaryTree dict;
+
+    public Scrabble()
+    {
+        dict = new DictionaryTree();
+    }
+
+    //Get Dictionary
+    public DictionaryTree getDict()
+    {
+        return this.dict;
+    }
 
     //How Many Words Are On The Board
     public int      getWordsOnBoard() { return this.wordsOnBoard; }
