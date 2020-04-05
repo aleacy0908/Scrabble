@@ -9,9 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+import javax.swing.*;
 
 
-public class NameCommandBox extends VBox {
+public class NameCommandBox<NameWindow> extends VBox {
 
     Button Done;
     TextField namep1;
@@ -49,14 +50,18 @@ public class NameCommandBox extends VBox {
         namep1 = new TextField();
         namep2 = new TextField();
 
-        getChildren().addAll(p1_name, namep1, p2_name, namep2, Done);
-
        Done.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle (ActionEvent event) {
 
+                System.exit(0);
             }
            });
 
+        getChildren().addAll(p1_name, namep1, p2_name, namep2, Done);
+
     }
+    
 }
+
+
