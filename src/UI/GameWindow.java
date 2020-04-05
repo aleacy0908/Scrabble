@@ -26,7 +26,7 @@ public class GameWindow extends Stage {
     /*---CUSTOM SETTINGS---*/
 
     //Main Window
-    private double windowWidth  = 700.0;
+    private double windowWidth  = 750.0;
     private double windowHeight = 400.0;
 
     //Button Settings
@@ -42,10 +42,10 @@ public class GameWindow extends Stage {
     //Player Input Area
     private String inputTextPrompt = "Enter Text Here";
 
-    private double inputSpaceWidth  = 200;
+    private double inputSpaceWidth  = 300;
     private double inputSpaceHeight = 100;
 
-    private double inputAreaWidth  = 210;
+    private double inputAreaWidth  = 270;
     private double inputAreaHeight = 25;
 
     //Game Output Area
