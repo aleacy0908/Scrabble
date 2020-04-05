@@ -133,14 +133,6 @@ public class Board {
      */
     public boolean tileSelection(Player player, int row, int column, char direction, String word, Scrabble GAME) {
 
-        /*
-        A backup is made of the players frame before selecting
-        a frame so it can be reverted if they fail any of the checks.
-        Needed for when a player uses a "_" tile as that tile is
-        replaced so it can work with the checks
-         */
-        ArrayList<Character> backup = new ArrayList<>(player.getFrameP().getFrame());
-
         AlertBox alert = new AlertBox();
         int numOfWordsOnBoard = GAME.getWordsOnBoard();
         boolean playerFinished = false;
@@ -153,19 +145,10 @@ public class Board {
                 break;
             }
 
-            //Allows the player to add a letter of their choice
-            while (word.contains("_")) {
-                InputPromptBox replaceChar = new InputPromptBox();
-                replaceChar.showBox(word, player);
-                word = replaceChar.getPlayersInput();
-            }
-
             //If the user didn't enter A or D, the player must try again
             if ((direction != 'D') && (direction != 'A')) {
                 System.out.println("Direction: " + direction);
                 alert.showBox("Error", "Invalid direction entered");
-                player.getFrameP().frame.clear();
-                player.getFrameP().frame.addAll(backup);
                 return false;
             }
 
@@ -176,8 +159,6 @@ public class Board {
              */
             if (!necessaryLetters(word, player, row, column, direction)) {
                 alert.showBox("Error", "Invalid word picked");
-                player.getFrameP().frame.clear();
-                player.getFrameP().frame.addAll(backup);
                 return false;
             }
 
@@ -187,15 +168,11 @@ public class Board {
             if (numOfWordsOnBoard == 0) {
                 if (!firstWord(row, column, word, direction)) {
                     alert.showBox("Error", "First played word must start at the centre of the board");
-                    player.getFrameP().frame.clear();
-                    player.getFrameP().frame.addAll(backup);
                     return false;
                 }
             } else {
                 if (!connectsToWord(row, column, word, direction)) {
                     alert.showBox("Error", "New word must be connected to another word");
-                    player.getFrameP().frame.clear();
-                    player.getFrameP().frame.addAll(backup);
                     return false;
                 }
             }
@@ -204,8 +181,6 @@ public class Board {
             //or if a invalid grid ref was given
             if (!withinBoard(row, column, direction, word)) {
                 alert.showBox("Error", "Out of board bounds");
-                player.getFrameP().frame.clear();
-                player.getFrameP().frame.addAll(backup);
                 return false;
             }
 
@@ -213,8 +188,6 @@ public class Board {
             //Checks if the given word conflicts with any other words on the board
             if (conflicts(row, column, word, direction)) {
                 alert.showBox("Error", "New word on given grid ref conflicts with another word on the board");
-                player.getFrameP().frame.clear();
-                player.getFrameP().frame.addAll(backup);
                 return false;
             }
 
@@ -230,11 +203,9 @@ public class Board {
             for (int i = 0; i < word.length(); i++) {
                 tiles.add(word.charAt(i));
             }
-            fillSquare(word, row, column, direction, tiles);
+            tiles = fillSquare(word, row, column, direction, tiles);
             GAME.getGUIBoard().setWord(word, row, column, direction);
             player.getFrameP().removeFromFrame(tiles);
-
-            GAME.setWordsOnBoard(numOfWordsOnBoard++);
 
             playerFinished = true;
 
@@ -251,7 +222,7 @@ public class Board {
     is already present on the board, it is removed from the list of letters
     that are going to be removed from a players frame.
      */
-    public void fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles) {
+    public ArrayList<Character> fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles){
 
         Square sqr;
 
@@ -260,7 +231,7 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
                     sqr = getSquare(row, column);
                     if (sqr.isOccupied()) {
-                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
+                        if (sqr.getLetter().equals(String.valueOf(word.charAt(i)))) {
                             tiles.remove(Character.valueOf(word.charAt(i)));
                         }
                     }
@@ -274,7 +245,7 @@ public class Board {
                 for (int i = 0; i < word.length(); i++) {
                     sqr = getSquare(row, column);
                     if (sqr.isOccupied()) {
-                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
+                        if (sqr.getLetter().equals(String.valueOf(word.charAt(i)))) {
                             tiles.remove(Character.valueOf(word.charAt(i)));
                         }
                     }
@@ -284,6 +255,8 @@ public class Board {
                 }
                 break;
         }
+
+        return tiles;
     }
 
     /*
@@ -391,7 +364,7 @@ public class Board {
         boolean usesLettersFromFrame = true;
         boolean onBoardAlready;
 
-        for (int i = 0; i <= word.length() - 1; i++) {
+        for (int i = 0; i <= word.length()-1; i++) {
 
             //Check if the letter uses frame letters
             //or is relying on the letter already

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import src.UI.GameWindow;
+import src.UI.InputPromptBox;
 import src.UI.PlayerNameBox;
 import src.mechanics.*;
 import src.user.Player;
@@ -133,15 +134,28 @@ public class MainActivity extends Application {
             //Which Player's Turn Is It?
             pName = currPlayer.nameP();
 
+            /*
+            A backup is made of the players frame before selecting
+            a frame so it can be reverted if they fail any of the checks.
+            Needed for when a player uses a "_" tile as that tile is
+            replaced so it can work with the checks
+            */
+            ArrayList<Character> backup = new ArrayList<>(currPlayer.getFrameP().getFrame());
+
             playerInput = mainWindow.getInputBoxText();
-
-
 
             //Parse Input
             WORD  = GAME.getWord(playerInput);
             COORD = GAME.getCoord(playerInput);
             DIR   = GAME.getDirection(playerInput);
             System.out.println(DIR);
+
+            //Allows the player to add a letter of their choice
+            while (WORD.contains("_")) {
+                InputPromptBox replaceChar = new InputPromptBox();
+                replaceChar.showBox(WORD, currPlayer);
+                WORD = replaceChar.getPlayersInput();
+            }
 
             //True If User Places Valid Word
             validMoveMade = GAME.getGUIBoard().getBoardMechanics().tileSelection(currPlayer, COORD[0]-1, COORD[1]-1,
@@ -151,6 +165,8 @@ public class MainActivity extends Application {
             {
                 GAME.setWordsOnBoard(GAME.getWordsOnBoard() + 1);
             }else{
+                currPlayer.getFrameP().getFrame().clear();
+                currPlayer.getFrameP().getFrame().addAll(backup);
                 break;
             }
 
