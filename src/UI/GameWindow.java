@@ -34,6 +34,7 @@ public class GameWindow extends Stage {
     private String passTxt = "Pass";
     private String quitTxt = "Quit";
     private String submitButton = "Submit";
+    private String Nametxt = "Name";
 
     private double btnWidth  = 235;
     private double btnHeight = 25;
@@ -66,7 +67,7 @@ public class GameWindow extends Stage {
 
     //GUI Elements
     private HBox      mainWindow, inputSpace;
-    private Button    help, quit, pass;
+    private Button    help, quit, pass, name;
     private VBox      console;
     private ButtonBar commandButtons;
 
@@ -97,6 +98,7 @@ public class GameWindow extends Stage {
         help = new Button(helpTxt);
         pass = new Button(passTxt);
         quit = new Button(quitTxt);
+        name = new Button(Nametxt);
 
         //Set the size of the entire game window
         mainWindow.setPrefSize(windowWidth, windowHeight);
@@ -120,7 +122,7 @@ public class GameWindow extends Stage {
 
         //Set the size for the button bar and add all buttons to it
         commandButtons.setPrefSize(btnWidth,btnHeight);
-        commandButtons.getButtons().addAll(pass,help,quit);
+        commandButtons.getButtons().addAll(pass,help,quit,name);
 
         console.setPadding(consolePadding);
 
@@ -133,6 +135,7 @@ public class GameWindow extends Stage {
         //Set the commands each button will execute when pressed
         quit.setOnAction(e -> new CloseGameBox());
         help.setOnAction(e -> new HelpBox());
+        name.setOnAction((e -> new NameCommandBox()));
 
         //Disable allowing a user to manually change the game windows size
         setResizable(false);
