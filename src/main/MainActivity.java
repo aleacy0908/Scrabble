@@ -4,13 +4,16 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
+import src.UI.AlertBox;
 import src.UI.GameWindow;
 import src.UI.InputPromptBox;
 import src.UI.PlayerNameBox;
 import src.mechanics.*;
 import src.user.Player;
+import src.user.Score;
 
 import java.util.ArrayList;
 
@@ -157,6 +160,19 @@ public class MainActivity extends Application {
                 WORD = replaceChar.getPlayersInput();
             }
 
+            //Valid Move, Thus Find Out Word Score
+            int wordScore = currPlayer.calculateScore(WORD, COORD[0], COORD[1], DIR);
+
+            int additionalWordsScore = additionalWordsCheck(WORD,COORD[0],COORD[1],DIR,
+                    GAME.getGUIBoard().getBoardMechanics());
+
+            if(additionalWordsScore == -1){
+                new AlertBox().showBox("Error", "An adjacent word is not within the dictionary");
+                currPlayer.getFrameP().getFrame().clear();
+                currPlayer.getFrameP().getFrame().addAll(backup);
+                break;
+            }
+
             //True If User Places Valid Word
             validMoveMade = GAME.getGUIBoard().getBoardMechanics().tileSelection(currPlayer, COORD[0]-1, COORD[1]-1,
                     DIR, WORD, GAME);
@@ -170,14 +186,15 @@ public class MainActivity extends Application {
                 break;
             }
 
-            //Valid Move, Thus Find Out Word Score
-            int wordScore = currPlayer.calculateScore(WORD, COORD[0], COORD[1], DIR);
-
             //Increase Player Score
-            currPlayer.increaseScore(wordScore);
+            currPlayer.increaseScore(wordScore+additionalWordsScore);
 
             //Print Out Score
             mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + WORD + " is Worth " + wordScore + " Points!");
+            if (additionalWordsScore > 0) {
+                mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + "Adjacent Words Are Worth " +
+                        additionalWordsScore + " Points!");
+            }
             mainWindow.setOutputText(mainWindow.getOutputText() + "\n" + pName + "'s Score Is " + currPlayer.getScore());
 
             //Increment current turn
@@ -203,6 +220,101 @@ public class MainActivity extends Application {
     //Simply used to print a players frame to the UI
     public ArrayList<Character> printFrame(){
         return currPlayer.getFrameP().getFrame();
+    }
+
+    //Checks if a new word is placed adjacent to another word, creating another word
+    public int additionalWordsCheck(String word, int row, int col, char dir, Board board){
+
+        int wordsFound = 0;
+        int scoreFromAdditionalWords = 0;
+        DictionaryTree dictionary = new DictionaryTree();
+        System.out.println("running additional words check");
+
+        for(char c : word.toCharArray())
+        {
+            //Place the next square the users word will occupy into this variable
+            Square sqr = board.getSquare(row,col);
+            boolean crossWordFound = false;
+
+            /*
+            Create temp variables of row and col so we can easily reset
+            them back to the next square the users word will occupy
+             */
+            int rowTmp = row;
+            int colTmp = col;
+
+            //Move the current sqr backwards until the start of the adjacent word is reached
+            while(sqr.isOccupied()){
+                if (dir == 'A'){
+                    if(board.getSquare(rowTmp-1, colTmp).isOccupied()){
+                        sqr = board.getSquare(rowTmp--, colTmp);
+                        crossWordFound = true;
+                    }
+                }else{
+                    if(board.getSquare(rowTmp, colTmp-1).isOccupied()){
+                        sqr = board.getSquare(rowTmp, colTmp--);
+                        crossWordFound = true;
+                    }
+                }
+            }
+
+            //Check If a new word was found and find its score if its found in the dictionary
+            if(crossWordFound){
+                String crossword = crossWords(rowTmp,colTmp,sqr,dir,board);
+
+                if(!dictionary.check(crossword)){
+                    //return -1 to the calling method to tell it the new word wasn't found in the dictionary
+                    scoreFromAdditionalWords = -1;
+                    break;
+                }
+                wordsFound++;
+
+                //If only one word is found, then it is ignored as this is the word the users new word is connected to
+                if(wordsFound > 1){
+                    //For each adjacent word found, find its score value and add it to the score total the user will get
+                    scoreFromAdditionalWords += currPlayer.calculateScore(word,rowTmp,colTmp,dir);
+                }
+            }
+
+            //Move To Next Square
+            if     (dir == 'A') col++;
+            else if(dir == 'D') row++;
+        }
+
+        System.out.println("didnt crash");
+        return scoreFromAdditionalWords;
+    }
+
+    //Turns the newly found adjacent word into a string
+    private String crossWords(int row, int col,Square sqr,char dir,Board board){
+        StringBuilder newWord = new StringBuilder();
+        System.out.println("running?");
+
+        //While the current square has a letter within it, the loop will run
+        while(sqr.isOccupied()){
+
+            //If the next square is empty, break the loop
+            if(!sqr.isOccupied()){
+                break;
+            }
+
+            //Append each letter of the adjacent word to the string
+            newWord.append(sqr.getLetter());
+
+            /*
+            If the word is going across, we need to get the downward adjacent word.
+            If the word is going downwards, we need to get the adjacent word going across.
+             */
+            if(dir == 'A') row++;
+            else           col++;
+
+            //Iterate to the next square
+            sqr = board.getSquare(row,col);
+        }
+
+        System.out.println("string created");
+        //Return the adjacent word
+        return newWord.toString();
     }
 
 }
