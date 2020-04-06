@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,7 +16,6 @@ import javax.swing.*;
 
 public class NameCommandBox extends VBox {
 
-    Stage NameWindow  = new Stage();
 
     Button Done;
     TextField namep1;
@@ -47,7 +47,7 @@ public class NameCommandBox extends VBox {
 
         Stage NameWindow  = new Stage();
         NameWindow.setMaxWidth(480);
-        NameWindow.setMinWidth(250);
+        NameWindow.setMinWidth(300);
 
         super.setSpacing(10);
         super.setPadding(new Insets(10,10,10,10));
@@ -63,15 +63,20 @@ public class NameCommandBox extends VBox {
        Done.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle (ActionEvent event) {
-
-                String namep1 = getp1_name();
-                String namep2 = getP2_name();
+                getp1_name();
+                getP2_name();
 
                 System.exit(0);
             }
            });
 
-        getChildren().addAll(p1_name, namep1, p2_name, namep2, Done);
+        VBox NC = new VBox(10);
+
+        NC.getChildren().addAll(p1_name, namep1, p2_name, namep2, Done);
+
+        Scene layout = new Scene(NC);
+
+        NameWindow.setScene(layout);
 
         NameWindow.show();
 
