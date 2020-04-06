@@ -8,11 +8,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 
 
-public class NameCommandBox<NameWindow> extends VBox {
+public class NameCommandBox extends VBox {
+
+    Stage NameWindow  = new Stage();
 
     Button Done;
     TextField namep1;
@@ -38,7 +41,13 @@ public class NameCommandBox<NameWindow> extends VBox {
         return namep2.getText().toString();
     }
 
-    public NameCommandBox ( ) {
+
+
+    public NameCommandBox () {
+
+        Stage NameWindow  = new Stage();
+        NameWindow.setMaxWidth(480);
+        NameWindow.setMinWidth(250);
 
         super.setSpacing(10);
         super.setPadding(new Insets(10,10,10,10));
@@ -50,9 +59,13 @@ public class NameCommandBox<NameWindow> extends VBox {
         namep1 = new TextField();
         namep2 = new TextField();
 
+
        Done.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle (ActionEvent event) {
+
+                String namep1 = getp1_name();
+                String namep2 = getP2_name();
 
                 System.exit(0);
             }
@@ -60,7 +73,10 @@ public class NameCommandBox<NameWindow> extends VBox {
 
         getChildren().addAll(p1_name, namep1, p2_name, namep2, Done);
 
+        NameWindow.show();
+
     }
+
     
 }
 
