@@ -14,7 +14,8 @@ public class HelpBox extends AlertBox {
                 "D(downwards)> <WORD>\n" +
                 "(Example: A1 A HELLO)\n" +
                 "QUIT: Close the game\n"  +
-                "HELP: Displays this message\n";
+                "HELP: Displays this message\n" +
+                "CHALLENGE: Type CHALLENGE to challenge a players word";
 
         showBox(helpTitle, helpMsg);
     }
