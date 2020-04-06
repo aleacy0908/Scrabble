@@ -98,7 +98,26 @@ public class MainActivity extends Application {
         //EventListener: When Submit Button Is Clicked
         mainWindow.getSubmitButton().setOnAction(e -> {
             String playerInp = mainWindow.getInputBoxText().toUpperCase();
-            takeTurn(playerInp);
+
+            switch(playerInp){
+
+                case "HELP":
+                    new HelpBox();
+                    break;
+
+                case "PASS":
+                    passTurn();
+                    break;
+
+                case "QUIT":
+                    new CloseGameBox();
+                    break;
+
+                default:
+                    takeTurn(playerInp);
+
+            }
+
         });
 
         //EventListener: When Pass Button is Clicked
