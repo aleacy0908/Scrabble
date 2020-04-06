@@ -158,7 +158,7 @@ public class Board {
 
             if (word.length() < 2) {
                 alert.showBox("Error", "Word must have 2 letters or more");
-                break;
+                return false;
             }
 
             //If the user didn't enter A or D, the player must try again
@@ -220,7 +220,7 @@ public class Board {
                 tiles.add(word.charAt(i));
             }
 
-
+            isSquareOccupied(word,row,column,direction,tiles);
             GAME.getGUIBoard().setWord(word, row, column, direction);
             player.getFrameP().removeFromFrame(tiles);
 
@@ -239,38 +239,21 @@ public class Board {
     is already present on the board, it is removed from the list of letters
     that are going to be removed from a players frame.
      */
-    public ArrayList<Character> fillSquare(String word, int row, int column, char direction, ArrayList<Character> tiles){
+    public ArrayList<Character> isSquareOccupied(String word, int row, int column, char direction, ArrayList<Character> tiles){
 
         Square sqr;
 
-        switch (direction) {
-            case 'D':
-                for (int i = 0; i < word.length(); i++) {
-                    sqr = getSquare(row, column);
-                    if (sqr.isOccupied()) {
-                        if (sqr.getLetter().equals(String.valueOf(word.charAt(i)))) {
-                            tiles.remove(Character.valueOf(word.charAt(i)));
-                        }
-                    }
-                    setSquare(row, column, String.valueOf(word.charAt(i)));
-                    row++;
-
+        for (char c : word.toCharArray()) {
+            sqr = getSquare(row, column);
+            if (sqr.isOccupied()) {
+                if (sqr.getLetter().equals(Character.toString(c))) {
+                    tiles.remove(Character.valueOf(c));
                 }
-                break;
+            }
 
-            case 'A':
-                for (int i = 0; i < word.length(); i++) {
-                    sqr = getSquare(row, column);
-                    if (sqr.isOccupied()) {
-                        if (sqr.getLetter().equals(String.valueOf(word.charAt(i)))) {
-                            tiles.remove(Character.valueOf(word.charAt(i)));
-                        }
-                    }
-                    setSquare(row, column, String.valueOf(word.charAt(i)));
-                    column++;
+            if(direction == 'D'){row++;}
+            else                {column++;}
 
-                }
-                break;
         }
 
         return tiles;
@@ -321,31 +304,20 @@ public class Board {
      */
     private boolean usesOnlyFromBoard(String word, int row, int column, char direction) {
         boolean onlyUsingLettersOnBoard = false;
-        Square sqr;
+        Square sqr = getSquare(row,column);
         int count = 0;
 
-        switch (direction) {
-            case 'D':
-                for (int i = 0; i < word.length(); i++) {
-                    sqr = getSquare(row++, column);
-                    if (sqr.isOccupied()) {
-                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
-                            count++;
-                        }
-                    }
+        for (char c : word.toCharArray()) {
+            if (sqr.isOccupied()) {
+                if (sqr.getLetter().equals(Character.toString(c))) {
+                    count++;
                 }
-                break;
+            }
 
-            case 'A':
-                for (int i = 0; i < word.length(); i++) {
-                    sqr = getSquare(row, column++);
-                    if (sqr.isOccupied()) {
-                        if (sqr.getLetter() == String.valueOf(word.charAt(i))) {
-                            count++;
-                        }
-                    }
-                }
-                break;
+            if(direction == 'D'){row++;}
+            else                {column++;}
+
+            sqr = getSquare(row, column);
         }
 
         if (count == word.length()) {
@@ -363,7 +335,7 @@ public class Board {
         Square sqr = getSquare(x, y);
 
         if (sqr.isOccupied()) {
-            return sqr.getLetter().equals(String.valueOf(letter));
+            return sqr.getLetter().equals(Character.toString(letter));
         }
 
         return false;
@@ -451,7 +423,7 @@ public class Board {
         for(char c : word.toCharArray())
         {
             sqr = getSquare(x, y);
-            String ltr = String.valueOf(c);
+            String ltr = Character.toString(c);
 
             //Check If Conflict
             if(sqr.isOccupied() && !sqr.getLetter().equals(ltr))

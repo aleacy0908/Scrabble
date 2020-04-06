@@ -36,6 +36,7 @@ public class MainActivity extends Application {
 
         GAME = new Scrabble();
         GAME.setGUIBoard(new GameBoard());
+        Stage gameStage = new Stage();
 
         //create the 'Enter Player Names' window
         playerNameWindow = new PlayerNameBox();
@@ -55,7 +56,9 @@ public class MainActivity extends Application {
 
                     mainWindow = new GameWindow(GAME.getGUIBoard());
 
-                    runGame(mainStage);
+                    mainStage.close();
+
+                    runGame(gameStage);
                 }
                 else
                 {
