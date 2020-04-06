@@ -16,6 +16,7 @@ import javax.swing.*;
 
 public class NameCommandBox extends VBox {
 
+    Stage NameWindow  = new Stage();
 
     Button Done;
     TextField namep1;
@@ -47,7 +48,7 @@ public class NameCommandBox extends VBox {
 
         Stage NameWindow  = new Stage();
         NameWindow.setMaxWidth(480);
-        NameWindow.setMinWidth(300);
+        NameWindow.setMinWidth(250);
 
         super.setSpacing(10);
         super.setPadding(new Insets(10,10,10,10));
@@ -63,12 +64,12 @@ public class NameCommandBox extends VBox {
        Done.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle (ActionEvent event) {
-                getp1_name();
-                getP2_name();
 
-                System.exit(0);
+                NameWindow.close();
             }
            });
+
+
 
         VBox NC = new VBox(10);
 
@@ -78,7 +79,7 @@ public class NameCommandBox extends VBox {
 
         NameWindow.setScene(layout);
 
-        NameWindow.show();
+        NameWindow.showAndWait();
 
     }
 

@@ -7,10 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
-import src.UI.AlertBox;
-import src.UI.GameWindow;
-import src.UI.InputPromptBox;
-import src.UI.PlayerNameBox;
+import src.UI.*;
 import src.mechanics.*;
 import src.user.Player;
 import src.user.Score;
@@ -107,6 +104,12 @@ public class MainActivity extends Application {
         //EventListener: When Pass Button is Clicked
         mainWindow.getPassButton().setOnAction(e -> {
             passTurn();
+        });
+
+        mainWindow.getNameButton().setOnAction(e -> {
+            NameCommandBox ncb = new NameCommandBox();
+            GAME.getPlayer(0).setPlayer(ncb.getp1_name());
+            GAME.getPlayer(1).setPlayer(ncb.getP2_name());
         });
 
     }

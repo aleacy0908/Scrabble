@@ -148,6 +148,10 @@ public class GameWindow extends Stage {
         return pass;
     }
 
+    public Button getNameButton() {
+        return name;
+    }
+
     public String getInputBoxText()
     {
         return this.input.getText().toString();
