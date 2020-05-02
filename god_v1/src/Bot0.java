@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Bot0 implements BotAPI {
 
@@ -22,6 +23,14 @@ public class Bot0 implements BotAPI {
     private final String COMMAND_NAME = "NAME pintsMen";
     private final String COMMAND_PASS = "PASS";
 
+    private final String DIR_ACROSS = "A";
+    private final String DIR_DOWN   = "D";
+
+    //FINAL CHOICE FOR EACH MOVE
+    String      WORD_CHOICE;
+    String      DIRECTION_CHOICE;
+    Coordinates COORD;
+
     Bot0(PlayerAPI me, OpponentAPI opponent, BoardAPI board, UserInterfaceAPI ui, DictionaryAPI dictionary) {
         this.me = me;
         this.opponent = opponent;
@@ -31,37 +40,97 @@ public class Bot0 implements BotAPI {
         turnCount = 0;
     }
 
-    public char getLetter(int x) {
+    //Turns num into a letter in the alphabet
+    public char getLetter(int x)
+    {
         return x > 0 && x < 15 ? (char) (x + 'A' - 1) : null;
     }
 
+    public String formCommandString(int r, int c, String dir, String word)
+    {
+        //Convert Row Num To Alphabet Letter
+        char letter = getLetter(c);
+
+        System.out.println("Row Command: " + r);
+        System.out.println("Col Command: " + c);
+
+        //Command Output
+        return (String.valueOf(letter) + r + " " + dir + " " + word);
+    }
+
+    /*
+    TODO:
+    This function needs to analyse the scores of each word at
+    each coordinate and pick the best one.
+     */
+    public void chooseBestWord(HashMap<Coordinates, String> acrossWords,
+                               HashMap<Coordinates, String> downWords)
+    {
+
+        if(acrossWords.size() != 0)
+        {
+            COORD = acrossWords.keySet().iterator().next();
+
+            System.out.println("AFter row: " + COORD.getRow());
+            System.out.println("AFter col: " + COORD.getCol());
+
+            WORD_CHOICE = acrossWords.get(COORD);
+            DIRECTION_CHOICE = DIR_ACROSS;
+        }
+
+        else if(downWords.size() != 0)
+        {
+            //These coordinates are the wrong way around
+            //because we transposed the board in order to
+            //find 'down' words
+            Coordinates tmp = downWords.keySet().iterator().next();
+
+            WORD_CHOICE = downWords.get(tmp);
+
+            //Un-transpose Coords
+            COORD = new Coordinates(tmp.getCol(), tmp.getRow());
+
+            //Direction is down
+            DIRECTION_CHOICE = DIR_DOWN;
+        }
+
+        else
+        {
+            DIRECTION_CHOICE = null;
+            WORD_CHOICE  = null;
+            COORD = null;
+        }
+    }
+
     public String getCommand() {
+        //Reset previous move's choices
+        DIRECTION_CHOICE = "";
+        WORD_CHOICE = "";
+        COORD = null;
+
+        System.out.println("New Move!");
+
 
         God almightyWordChooser = new God();
 
-        int len = me.getFrameAsString().length();
 
+        //Turn Our Frame Into A Regular String
         String FRAME = "";
-
+        int len = me.getFrameAsString().length();
         String[] myFrame = me.getFrameAsString().substring(1, len - 2).split(", ");
 
         for(String s : myFrame)
             FRAME += s;
 
-
-        System.out.println("MY FRAME");
-        for(String x : myFrame) System.out.println(x);
-        System.out.println("\n");
-
-        //TODO: CHOOSE WHICH WORD GIVES US
-        //THE BIGGEST SCORE
-
-        if (turnCount++ == 0)
+        /*
+        //Set Our Name
+        if (turnCount == 0)
+        {
+            turnCount++;
             return COMMAND_NAME;
+        }*/
 
-        //A1 D HELLO
-
-        String command = "";
+        String command;
 
         if(board.isFirstPlay())
         {
@@ -74,37 +143,40 @@ public class Bot0 implements BotAPI {
                 return COMMAND_PASS;
 
             //TEMPORARILY JUST CHOOSING FIRST OPTION
-            command = firstMoveList.get(0);
+            String finalWord = firstMoveList.get(0);
+
+            //Only sets words across on the first go (could make random)
+            command = formCommandString(8, 8, DIR_ACROSS, finalWord);
         }
         else {
-            HashMap<Coordinates, String> wordMap =
+
+            //Across word options
+            HashMap<Coordinates, String> wordMapAcross =
                     almightyWordChooser.choose(this.board, FRAME);
+
+            //Down word options (we do this by transposing the board)
+            TransposeBoard tpBoard = new TransposeBoard(this.board);
+
+            HashMap<Coordinates, String> wordMapDown =
+                    almightyWordChooser.choose(tpBoard, FRAME);
 
             /*
             Unfortunately, we have to pass if God
             can't find any scrabble words.
              */
-            if (wordMap.size() == 0)
+            if (wordMapAcross.size() == 0 &&
+                wordMapDown.size()   == 0)
                 return COMMAND_PASS;
 
 
-            Set<Coordinates> keySet = wordMap.keySet();
+            chooseBestWord(wordMapAcross, wordMapDown);
 
-            //Choose first coordinate [for no reason]
-            Coordinates wordCoord = keySet.iterator().next();
+            int row = COORD.getRow();
+            int col = COORD.getCol();
 
-            String direction = "A";
+            System.out.println("Word choice: " + WORD_CHOICE);
 
-            //might be a problem w map here
-            String finalWordChoice = wordMap.get(wordCoord);
-
-            //0-14
-            int r = wordCoord.getRow();
-
-            //A-idk
-            char c = getLetter(wordCoord.getCol());
-
-            command = (String.valueOf(r) + c + " " + direction + " " + finalWordChoice);
+            command = formCommandString(row, col, DIRECTION_CHOICE, WORD_CHOICE);
         }
 
         turnCount++;
@@ -160,7 +232,7 @@ class God {
                     continue;
 
                 for(char x : word)
-                    wordBuilder.append(c);
+                    wordBuilder.append(x);
 
                 wordList.add(wordBuilder.toString());
             }
@@ -201,6 +273,10 @@ class God {
 
                 for(Character c : word)
                     wordBuilder.append(c);
+
+                System.out.println("Coord Row: " + coord.getRow());
+                System.out.println("Coord Row: " + coord.getCol());
+                System.out.println("Word: "  + wordBuilder.toString());
 
                 //Place in wordmap
                 wordMap.put(coord, wordBuilder.toString());
@@ -455,7 +531,7 @@ class PlacementTable
         firstMoveTable.add(new PotentialTile(firstLetter));
 
         for(int i = 1; i < 7; i++)
-            firstMoveTable.add(new PotentialTile('*'));
+            firstMoveTable.add(new PotentialTile());
 
         return firstMoveTable;
     }
@@ -696,7 +772,7 @@ class SuperDuperWordPicker {
 
             Character c = letter.getData();
 
-            System.out.println(c);
+            System.out.println("Testing: " + c);
 
             //Check our restrictions
             if(currTile.hasRestriction())
@@ -706,8 +782,6 @@ class SuperDuperWordPicker {
                 if(!valid)
                     return false;
             }
-
-            System.out.println(c);
 
             /*
             It's getting serious..
@@ -757,6 +831,7 @@ class SuperDuperWordPicker {
             }
             else
             {
+                System.out.println("Found The Word " + output);
                 //We found a word !
                 return true;
             }
@@ -808,31 +883,25 @@ class SuperDuperWordPicker {
 
 class PotentialTile {
 
-    private boolean hasRestriction;
+    private char potentialTile = '*';
+
+    private boolean hasRestriction = false;
     Restriction restriction;
 
-    private boolean hasLetter;
-    private char letter;
+    private boolean hasLetter = false;
+    private char letter = potentialTile;
 
-    public PotentialTile()
-    {
-        hasRestriction = false;
-        hasLetter = false;
-    }
+    public PotentialTile() {}
 
     public PotentialTile(Restriction r)
     {
         hasRestriction = true;
-        hasLetter = false;
-
         this.restriction = r;
     }
 
     public PotentialTile(char letter)
     {
-        hasRestriction = false;
         hasLetter = true;
-
         this.letter = letter;
     }
 
@@ -1161,6 +1230,33 @@ class DictionaryTree {
     public boolean check(String word)
     {
         return searchTree(word, ROOT, 0);
+    }
+}
+
+class TransposeBoard implements BoardAPI
+{
+
+    BoardAPI original;
+
+    public TransposeBoard(BoardAPI b)
+    {
+        this.original = b;
+    }
+
+    @Override
+    public boolean isLegalPlay(Frame frame, Word word) {
+        return original.isLegalPlay(frame, word);
+    }
+
+    //TRANSPOSES THE BOARD
+    @Override
+    public Square getSquareCopy(int row, int col) {
+        return original.getSquareCopy(col, row);
+    }
+
+    @Override
+    public boolean isFirstPlay() {
+        return original.isFirstPlay();
     }
 }
 
