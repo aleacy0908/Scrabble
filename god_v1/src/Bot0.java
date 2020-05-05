@@ -58,18 +58,13 @@ public class Bot0 implements BotAPI {
         return (String.valueOf(letter) + r + " " + dir + " " + word);
     }
 
-    /*
-    TODO:
-    This function needs to analyse the scores of each word at
-    each coordinate and pick the best one.
-     */
     public void chooseBestWord(HashMap<Coordinates, String> acrossWords,
                                HashMap<Coordinates, String> downWords)
     {
 
         if(acrossWords.size() != 0)
         {
-            COORD = acrossWords.keySet().iterator().next();
+            COORD = calculateWordScore(acrossWords);
 
             System.out.println("AFter row: " + COORD.getRow());
             System.out.println("AFter col: " + COORD.getCol());
@@ -83,7 +78,7 @@ public class Bot0 implements BotAPI {
             //These coordinates are the wrong way around
             //because we transposed the board in order to
             //find 'down' words
-            Coordinates tmp = downWords.keySet().iterator().next();
+            Coordinates tmp = calculateWordScore(downWords);
 
             WORD_CHOICE = downWords.get(tmp);
 
@@ -100,6 +95,42 @@ public class Bot0 implements BotAPI {
             WORD_CHOICE  = null;
             COORD = null;
         }
+    }
+
+    /*
+Calculates the score of each word within the list of words viable for placement
+ */
+    public Coordinates calculateWordScore(HashMap<Coordinates, String> words){
+
+        final int[] TILE_VALUE = {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
+
+        int lastWordsScore = 0;
+
+        Coordinates currWordCoord = words.keySet().iterator().next();
+        Coordinates bestScoringWord = currWordCoord;
+
+        for(Map.Entry<Coordinates, String> mapElement : words.entrySet()){
+            int count = 0;
+            int wordValue = 0;
+            String word = mapElement.getValue();
+            currWordCoord = mapElement.getKey();
+
+            while (count < word.length()){
+                wordValue += TILE_VALUE[(int) word.charAt(count) - (int) 'A'];
+                count++;
+            }
+
+            //if the next word has greater score value than the last, change to that word
+            if (wordValue > lastWordsScore) {
+                lastWordsScore = wordValue;
+                bestScoringWord = currWordCoord;
+            }
+
+            System.out.println("word: "+word);
+        }
+
+        System.out.println("Found best scoring word");
+        return bestScoringWord;
     }
 
     public String getCommand() {
